@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="zlPocket"
+  id="myeclipse.1354008262343"
+  context-root="/zlPocket"
+  j2ee-spec="5.0"
+  archive="zlPocket.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

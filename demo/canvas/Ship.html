@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+#canvas{
+	border-bottom: 1px solid #ffffff;
+	background-color: #000;
+
+}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="600" height="600"></canvas>
+	<div id="div"></div>
+</body>
+<script src="./js/utils.js"></script>
+<script src="./js/Ship.js"></script>
+<script>
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame   ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		function( callback ){
+		//没有浏览器支持时使用setTimeout代替
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
+
+	window.onload=function(){
+
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+
+		var left = 0,
+		top = 0,
+		right = canvas.width,
+		bottom = canvas.height;
+
+		var ship = new Ship();
+		ship.x=canvas.width/2;
+		ship.y=canvas.height/2;
+
+		var vr = 0;
+		var f = 0;
+
+		window.addEventListener("keydown",function(event){
+			console.log(event.keyCode);
+			switch(event.keyCode){
+				case 37://左,逆时针旋转
+					vr=-3;
+					break;
+				case 39://右,顺时针旋转
+					vr=3;
+					break;
+				case 38://上，加速
+					f=0.05;
+					ship.showFlame=true;
+					break;
+				case 40:
+					ship.vx=ship.vy=0;
+					break;
+			}
+		});
+		window.addEventListener("keyup",function(event){
+			ship.showFlame=false;
+			vr=0;
+			f=0;
+		},false);
+		var div = document.getElementById('div');
+		(function animloop(){
+			requestAnimFrame(animloop,canvas);
+			context.clearRect(0,0,canvas.width,canvas.height);
+			//通过角度和大小确定加速度，从而确定飞船的速度与位置
+			ship.rotation+=vr*Math.PI/180;
+			ship.vx+=Math.cos(ship.rotation)*f;
+			ship.vy+=Math.sin(ship.rotation)*f;
+			ship.x+=ship.vx;
+			ship.y+=ship.vy;
+			if(ship.x-ship.width/2>right){
+				ship.x=left-ship.width/2;
+			}else if(ship.x+ship.width<left){
+				ship.x=right+ship.width/2;
+			}else if(ship.y+ship.height/2<top){
+				ship.y=bottom+ship.height/2;
+			}else if(ship.y-ship.height/2>bottom){
+				ship.y=top-ship.height/2;
+			}
+			ship.paint(context);
+			div.innerHTML=ship.vx+","+ship.vy;
+		})()
+	}
+</script>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+	<div id="div"></div>
+</body>
+<script>
+	/*获取动画执行帧对象*/
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame   ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		function( callback ){
+		//没有浏览器支持时使用setTimeout代替
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
+
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+	var x = 150;
+	var y = 150;
+	var r = 40000;
+	var girth = 0;
+
+	for (var i = x - r; i < x + r + 1; i++) {
+		var tempY1 = Math.pow(r*r - (x-i)*(x-i),1/2);
+		
+		context.lineTo(i,y+tempY1);
+
+		var tempX = r*r-(x-i+1)*(x-i+1);
+		var tempY2 = Math.pow(r*r-(x-i+1)*(x-i+1),1/2);
+		var temp = getLenLengthOfTwoPoint({x:i-1,y:tempY2},{x:i,y:tempY1});
+
+		if(tempX>=0){
+			girth+=temp;
+		}
+	}
+	console.log(girth/r);
+	function getLenLengthOfTwoPoint(startPoint,endPoint){
+		var calX = Math.abs(startPoint.x - endPoint.x);
+		var calY = Math.abs(startPoint.y - endPoint.y);
+		return Math.pow((calX*calX+calY*calY),0.5);
+	}
+
+</script>
+
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<canvas id="canvas" width="600" height="500"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script>
+		/*获取动画执行帧对象*/	
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame   ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			window.oRequestAnimationFrame      ||
+			window.msRequestAnimationFrame     ||
+			function( callback ){
+			//没有浏览器支持时使用setTimeout代替
+				window.setTimeout(callback, 1000 / 60);
+			};
+	})();
+	
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max-min+1)));
+	}
+
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	var balls = [];
+
+	for (var i = 0; i < 10; i++) {
+		var ball = {
+			position:new Vector2(getRandomNumber(20,600),getRandomNumber(20,600)),
+			r:getRandomNumber(6,120),
+			speed:new Vector2(getRandomNumber(-200,200),getRandomNumber(-200,200)),
+			mass:1,// 质量
+			restitution:1 //弹性
+		}
+		balls.push(ball);
+	}
+
+	var filterBalls = [];
+	for (var i = 0; i < balls.length; i++) {
+		var overlapCount = 0;
+		for (var j = i+1; j < balls.length; j++) {
+			var distance = balls[i].position.distanceTo(balls[j].position);
+			if(distance<=balls[i].r+balls[j].r){
+				overlapCount++
+			}
+		}
+		if(overlapCount === 0){
+			filterBalls.push(balls[i]);
+		}
+	}
+	balls = filterBalls;
+	function init(){
+		context.fillStyle = "#fff"
+		for (var i in balls) {
+			context.beginPath();
+			context.arc(balls[i].position.x,balls[i].position.y,balls[i].r,0,Math.PI*2,true);
+			context.closePath();
+			context.fill();
+		}
+	}
+	init();
+	
+	var cyc = 20;
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop,canvas);
+		//context.clearRect(0,0,canvas.width,canvas.height);
+
+		context.fillStyle="rgba(0,0,0,.3)";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		context.fillStyle="#fff";
+		
+		for (var i = 0; i < balls.length; i++) {
+			for (var j = i+1; j < balls.length; j++) {
+				collisionSolver(balls[i],balls[j]);
+			}
+		}
+
+
+		for(i in balls){
+			context.beginPath();
+			context.arc(balls[i].position.x,balls[i].position.y,balls[i].r,0,Math.PI*2,true);
+			context.closePath();
+			context.fill();
+
+			if(balls[i].r+balls[i].position.x>canvas.width){
+				balls[i].position.x = canvas.width-balls[i].r;
+				balls[i].speed.x *= -1;
+			}
+			if(balls[i].position.x<balls[i].r){
+				balls[i].position.x = balls[i].r;
+				balls[i].speed.x *= -1;
+			}
+			if(balls[i].r+balls[i].position.y>canvas.height){
+				balls[i].position.y = canvas.height - balls[i].r;
+				balls[i].speed.y *= -1;
+			}
+			if(balls[i].position.y<balls[i].r){
+				balls[i].position.y=balls[i].r;
+				balls[i].speed.y*=-1;
+			}
+			balls[i].position.x += balls[i].speed.x * cyc/1000;
+			balls[i].position.y += balls[i].speed.y * cyc/1000;
+		}
+		
+	})()
+/**
+	 * 碰撞处理
+	 * @return {[type]} [description]
+	 */
+	function collisionSolver(bodyA,bodyB){
+		bodyA.mass = bodyA.r * 2;
+		bodyB.mass = bodyB.r * 2;
+		var vA = bodyA.speed;
+		var vB = bodyB.speed;
+		var l = bodyA.r + bodyB.r;
+		var distSqr = bodyA.position.distanceToSquared(bodyB.position);
+		var isTouching = distSqr <= l*l?true:false;
+		var normal = Vector2.sub(bodyB.position,bodyA.position).normalize();
+		var ratio = bodyA.r / l;
+		var contactPoint = new Vector2();
+		contactPoint.x = bodyA.position.x + (bodyB.position.x - bodyA.position.x) * ratio;
+		contactPoint.y = bodyA.position.y + (bodyB.position.y - bodyA.position.y) * ratio;
+
+		var rA = Vector2.sub(contactPoint,bodyA.position);
+		var rB = Vector2.sub(contactPoint,bodyB.position);
+		var vrn =Vector2.sub(vA,vB).dot(normal);
+		if(isTouching && vrn >0){
+			var normalMass = 1/(1/bodyA.mass+1/bodyB.mass);
+			var restitution = (bodyA.restitution + bodyB.restitution)/2;
+			var normalImpulse = -normalMass * vrn * (1+restitution);
+			bodyA.speed.x += normalImpulse * normal.x / bodyA.mass
+			bodyA.speed.y += normalImpulse * normal.y / bodyA.mass
+			bodyB.speed.x -= normalImpulse * normal.x / bodyB.mass
+			bodyB.speed.y -= normalImpulse * normal.y / bodyB.mass
+		}
+	}
+</script>
+</html>

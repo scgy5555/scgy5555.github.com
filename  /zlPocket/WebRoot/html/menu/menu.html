@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-cale=1.0, user-scalable=none;" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>菜单页</title>
+	<link rel="stylesheet" href="../../css/reset.css">
+	<style>
+#wraper{
+	position:absolute;
+	z-index:1;
+	top:45px; bottom:48px; left:0;
+	width:100%;
+	overflow:auto;
+}
+#menu_list{
+	position:relative;
+}
+#menu_list ul{
+	width: 100%;
+}
+#menu_list li{
+	width: 40%;
+	height: 166px;
+	background: #6fafd3;
+	margin: 5px;
+	display: inline-block;
+}
+header{
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: #eee;
+	height: 75px;
+}
+footer{
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background: #333;
+	height: 48px;
+}
+
+#h_wraper{
+	width: 300px;
+	margin: 0 auto;
+	height: 30px;
+	position: relative;
+	z-index: 1;
+
+	overflow:auto;
+	float: left;
+}
+#scroller{
+	width: 2100px;
+	height: 100%;
+	float: left;
+}
+#h_wraper li{
+	float: left;
+	width: 300px;
+	text-align: center;
+	background: #fff;
+	border-right: 1px solid #000;
+}
+	</style>
+</head>
+<body>
+	<header>
+	
+	</header>
+	<div id="h_wraper">
+		<div id="scroller">
+			<ul id="list">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ul>
+		</div>
+	</div>
+	<div id="wraper">
+		<div id="menu_list">
+			<ul>
+				<li><a href="#246">1</a></li>
+				<li><a href="#247">2</a></li>
+				<li><a href="#248">3</a></li>
+				<li><a href="#249">4</a></li>
+				<li><a href="#250">5</a></li>
+				<li><a href="#251">6</a></li>
+			</ul>
+		</div>
+	</div>
+	<footer>
+		
+	</footer>
+</body>
+<script src="../../js/base/sea.js"></script>
+<script>
+	alert(1);
+	console.log(111);
+	// seajs.config({
+	// 	alias: {
+	// 		'iscroll': '../../js/plugins/iscroll',
+	// 		'$': '../../js/base/zepto',
+	// 		'menu': '../../js/action/menu'
+	// 	}
+	// });
+	// seajs.use("menu",function(menu){
+	// 	menu.ie();
+	// })
+</script>
+</html>

@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+/* 
+	@名称: fn
+	@功能: 常用功能样式
+*/
+
+/* 清理浮动 */
+.fn-clear:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+/* 隐藏, 通常用来与 JS 配合 */
+body .fn-hide {
+	visibility: hidden;
+}
+
+.fn-left {
+	float: left;
+}
+
+.fn-right {
+	float: right;
+}

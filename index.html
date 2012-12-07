@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -67,3 +68,22 @@ $ git checkout gh-pages
 
   </body>
 </html>
+=======
+---
+layout: default
+title: Home
+---
+欢迎进入
+
+<section>
+<h1>博客首页</h1>
+  <ul class=posts>
+    {% for post in site.posts %}
+      <li>
+      	<span>{{ post.date | date_to_string }}</span> &raquo;
+      	<a target="_blank" title="{{ post.title }}" href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+>>>>>>> origin/gh-pages

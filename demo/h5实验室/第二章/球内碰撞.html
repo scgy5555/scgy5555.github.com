@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<canvas id="canvas" width="800" height="600"></canvas>
+</body>
+<script>
+		/*获取动画执行帧对象*/	
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame   ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			window.oRequestAnimationFrame      ||
+			window.msRequestAnimationFrame     ||
+			function( callback ){
+			//没有浏览器支持时使用setTimeout代替
+				window.setTimeout(callback, 1000 / 60);
+			};
+	})();
+	
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max-min+1)));
+	}
+
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	var r=2;
+	var balls = [];
+	for (var i = 0; i < 500; i++) {
+		var ball = {
+			x:300,
+			y:150,
+			r:r,
+			v:getRandomNumber(50,200),
+			direction:(getRandomNumber(0,360)/360) * 2 * Math.PI,
+			distanceTo: function (v) {
+				return Math.sqrt(this.distanceToSquared(v));
+			},
+			distanceToSquared: function (v) {
+				var dx = this.x - v.x, dy = this.y - v.y;
+				return dx * dx + dy * dy;
+			}
+		}
+		balls.push(ball);
+	}
+
+	var bigCircularity = {
+		x:300,
+		y:250,
+		r:300
+	}
+
+	var cyc=100;
+	var a=10;
+	
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop,canvas);
+		//context.clearRect(0,0,canvas.width,canvas.height);
+
+		context.fillStyle="rgba(0,0,0,.3)";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		context.fillStyle="#fff";
+		context.strokeStyle = "#fff";
+		context.beginPath();
+		context.arc(bigCircularity.x, bigCircularity.y, bigCircularity.r, 0, Math.PI * 2, false);
+		context.stroke();
+
+		for(var i in balls){
+			context.beginPath();
+			context.arc(balls[i].x,balls[i].y,balls[i].r,0,Math.PI*2,true);
+			context.closePath();
+			context.fill();
+			
+			var distance = balls[i].distanceTo(bigCircularity);
+			if(Math.round(Math.pow(balls[i].x - bigCircularity.x,2)+Math.pow(bigCircularity.y - balls[i].y,2))>Math.round(Math.pow(bigCircularity.r - balls[i].r,2))){
+				var cD = balls[i].direction;
+				var step = Math.acos((balls[i].x - bigCircularity.x)/distance);
+				if(balls[i].y>bigCircularity.y){
+					balls[i].direction = -cD - Math.PI + 2 * step;
+				}else{
+					balls[i].direction = -cD + Math.PI - 2 * step;
+				}
+			}
+
+			balls[i].x += balls[i].v * Math.cos(balls[i].direction) * cyc / 1000;
+			console.log(balls[i].v);
+			balls[i].y += balls[i].v * Math.sin(balls[i].direction) * cyc / 1000;
+
+		}
+		
+	})()
+</script>
+</html>

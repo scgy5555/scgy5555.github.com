@@ -1,0 +1,21 @@
+# Jekyll Configuration
+
+url: http://scgy5555.github.com/ #XXX
+title: Scgy5555 #XXX
+description: Tag line #XXX
+author: scgy5555 #XXX
+email: scgy5555@gmail.com #XXX
+analytics_id: #Google Analytics ID : UA-xxx-xxx  
+baseurl: /
+
+auto: false
+lsi: false
+pygments: false
+server_port: 4000
+markdown: maruku
+
+maruku:
+  use_tex: false
+  use_divs: false
+  png_dir: img/tex
+  png_url: /img/tex

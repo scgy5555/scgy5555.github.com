@@ -1,0 +1,27 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Page</title>
+    <script type="text/javascript">
+        var a, b, c;
+        window.addEventListener('deviceorientation', function (event) {
+             a = event.alpha;//手机水平时指向角度_指南针 360°
+             b = event.beta;//竖向手机角度获取
+             g = event.gamma;//横向手机角度获取
+             document.getElementById("a").innerHTML = a;
+             document.getElementById("b").innerHTML = b;
+             document.getElementById("g").innerHTML = g;
+         }, false);
+    </script>
+</head>
+<body>
+我是痴汉我怕谁
+<br />
+指南针坐标：<span id="a"></span>
+<br />
+手机纵向角度：<span id="b"></span><br />
+手机横向角度<span id="g"></span>
+</body>
+</html>
+

@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<canvas id="canvas" width="600" height="500"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script>
+		/*获取动画执行帧对象*/	
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame   ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			window.oRequestAnimationFrame      ||
+			window.msRequestAnimationFrame     ||
+			function( callback ){
+			//没有浏览器支持时使用setTimeout代替
+				window.setTimeout(callback, 1000 / 60);
+			};
+	})();
+	
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max-min+1)));
+	}
+	/**
+	 * 计算对称点
+	 * @param  {[type]} line [description]
+	 * @return {[type]}      [description]
+	 */
+	function reflectionByLine (line) {
+		var cp = line.getVerticalCrossoverPoint(this);
+		this.reflectionByLine(cp);
+		return this;
+	}
+	/**
+	 * 计算垂直与反射面相交的点
+	 * @param  {[type]} v [description]
+	 * @return {[type]}   [description]
+	 */
+	function getVerticalCrossoverPoint(v){
+		if(this.p2.x === this.p1.x){
+			return new Vector2(this.p1.x,v.y);
+		}
+		if(this.p2.y === this.p1.y){
+			return new Vector2(v.x,this.p1.y);	
+		}
+		var k = (this.p2.y-this.p1.y)/(this.p2.x-this.p1.x);
+		var cx = (k * k * this.p1.x + v.y * k + v.x - this.p1.y * k)/(k*k+1);
+		var cy = k*cx-k*this.p1.x+this.p1.y;
+		return new Vector2(cx,cy);
+	}
+
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	var balls = [];
+	for (var i = 0; i < 100; i++) {
+		var ball = {
+			position:new Vector2(250,200),
+			r:getRandomNumber(6,20),
+			v:new Vector2(getRandomNumber(-200,200),getRandomNumber(-200,200))
+		}
+		balls.push(ball);
+	}
+
+	var cyc=10;
+
+	var p1 = new Vector2(0,400);
+	var p2 = new Vector2(300,500);
+	var p3 = new Vector2(600,400);
+	var p4 = new Vector2(0,100);
+	var p5 = new Vector2(300,0);
+	var p6 = new Vector2(600,100);
+
+
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop,canvas);
+		//context.clearRect(0,0,canvas.width,canvas.height);
+
+		context.fillStyle="rgba(0,0,0,.3)";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		context.fillStyle="#fff";
+		
+
+
+		for(var i in balls){
+			context.beginPath();
+			context.arc(balls[i].position.x,balls[i].position.y,balls[i].r,0,Math.PI*2,true);
+			context.closePath();
+			context.fill();
+
+			if(balls[i].position.distanceToLine(p1,p2)<balls[i].r){
+				balls[i].v.reflectionSelf(Vector2.sub(p1,p2).vertical())
+			}
+
+			if(balls[i].position.distanceToLine(p2,p3)<balls[i].r){
+				balls[i].v.reflectionSelf(Vector2.sub(p2,p3).vertical())
+			}
+
+			if(balls[i].position.distanceToLine(p4,p5)<balls[i].r){
+				balls[i].v.reflectionSelf(Vector2.sub(p4,p5).vertical())
+			}
+			
+			if(balls[i].position.distanceToLine(p5,p6)<balls[i].r){
+				balls[i].v.reflectionSelf(Vector2.sub(p5,p6).vertical())
+			}
+
+			if(balls[i].r+balls[i].position.x>canvas.width||balls[i].position.x<balls[i].r){
+				balls[i].v.reflectionSelf(new Vector2(1,0));
+			}
+
+			if(balls[i].r+balls[i].position.y>canvas.height||balls[i].position.y<balls[i].r){
+				balls[i].v.reflectionSelf(new Vector2(0,1));
+			}
+			console.log()
+			balls[i].position.x+=balls[i].v.x*cyc/1000;
+			balls[i].position.y+=balls[i].v.y*cyc/1000;
+		}
+
+		context.strokeStyle = "#fff";
+		context.moveTo(p1.x,p1.y);
+		context.lineTo(p2.x,p2.y);
+		context.lineTo(p3.x,p3.y);
+
+		context.moveTo(p4.x,p4.y);
+		context.lineTo(p5.x,p5.y);
+		context.lineTo(p6.x,p6.y);
+		context.stroke();
+		
+	})()
+</script>
+</html>

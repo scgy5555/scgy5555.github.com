@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+canvas{
+	width: 400px;
+	height: 200px;
+	border: 1px solid #000;
+}
+</style>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+</body>
+<script>
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	//五个圆
+	context.lineWidth=5;
+	context.strokeStyle="#163b62"
+	context.beginPath();
+	context.arc(70,70,40,0,Math.PI*2,false);
+	context.stroke();
+
+	context.strokeStyle="#000000"
+	context.beginPath();
+	context.arc(160, 70, 40, 0,Math.PI*2,false);
+	context.stroke();
+	
+	context.strokeStyle="#bf0628"
+	context.beginPath();
+	context.arc(250, 70, 40, 0,Math.PI*2,false);
+	context.stroke();
+	
+	context.strokeStyle="#ebc41f"
+	context.beginPath();
+	context.arc(110, 110, 40, 0,Math.PI*2,false);
+	context.stroke();
+	
+	context.strokeStyle="#198e4a"
+	context.beginPath();
+	context.arc(200, 110, 40, 0,Math.PI*2,false);
+	context.stroke();
+
+	//圆弧部分
+	context.strokeStyle="#ff00ff"
+	context.beginPath();
+	context.arc(70, 70, 40, Math.PI*1.9,Math.PI*2.1,false);
+	context.stroke();
+	
+	context.strokeStyle="#ff00ff"
+	context.beginPath();
+	context.arc(160, 70, 40, Math.PI*0.9,Math.PI*2.1,false);
+	context.stroke();
+		
+	context.strokeStyle="#bf0628"
+	context.beginPath();
+	context.arc(250, 70, 40, Math.PI*0.9,Math.PI*1.1,false);
+	context.stroke();
+
+
+
+</script>
+</html>

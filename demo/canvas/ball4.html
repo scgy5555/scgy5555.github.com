@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+	<div id="div"></div>
+</body>
+<script src="./js/utils.js"></script>
+<script src="./js/Ball.js"></script>
+<script>
+	/*获取动画执行帧对象*/
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame   ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		function( callback ){
+		//没有浏览器支持时使用setTimeout代替
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
+
+window.onload=function(){
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+	var mouse = utils.captureMousePosition(canvas);
+	var EASING = 0.05;
+	//拖拽坐标
+	var fix_mouse_drag_offset_x=0;
+	var fix_mouse_drag_offset_y=0;
+
+	var ball=new Ball(50);
+	ball.x=canvas.width/2;
+	ball.y=canvas.height/2;
+	var isMouseDown=false;
+	//鼠标按下时检测是否位于小球内部，如果位于，则注册处理函数
+	canvas.addEventListener("mousedown",function(event){
+		if(utils.containsPoint(ball.getBounds(),mouse.x,mouse.y)){
+			isMouseDown = true;
+			//精准点击位置
+			fix_mouse_drag_offset_x=mouse.x-ball.x;
+			fix_mouse_drag_offset_y=mouse.y-ball.y;
+		}
+	},false);
+	canvas.addEventListener("mousemove",function(event){
+		if(isMouseDown){
+			ball.x=mouse.x - fix_mouse_drag_offset_x;
+			ball.y=mouse.y - fix_mouse_drag_offset_y;
+		}
+	},false);
+	canvas.addEventListener("mouseup",function(event){
+		isMouseDown=false;
+	},false);
+	
+	var animationFlag = null;
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		animationFlag = requestAnimFrame(animloop,canvas);
+		context.clearRect(0,0,canvas.width,canvas.height);
+		if(!isMouseDown){
+			
+			ball.vy=(canvas.height/2 - ball.y)*EASING;
+			ball.y+=ball.vy;
+		
+			var dx = canvas.width/2 - ball.x;  
+	        //距离一像素以内时，停止处理  
+	        if (Math.abs(dx) < 1) {  
+	            ball.x = canvas.width/2;  
+	            //window.webkitCancelRequestAnimationFrame(animationFlag);  
+	        } else {
+	             var vx = dx * EASING;  
+	             ball.x += vx;
+	        }
+
+        }
+
+		ball.paint(context);
+		var myrect=ball.getBounds();
+		context.strokeRect(myrect.x,myrect.y,myrect.width,myrect.height);
+	})()
+}
+</script>
+
+</html>

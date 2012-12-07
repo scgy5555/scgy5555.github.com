@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<canvas id="canvas" width="800" height="300"></canvas>
+</body>
+<script>
+		/*获取动画执行帧对象*/	
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame   ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			window.oRequestAnimationFrame      ||
+			window.msRequestAnimationFrame     ||
+			function( callback ){
+			//没有浏览器支持时使用setTimeout代替
+				window.setTimeout(callback, 1000 / 60);
+			};
+	})();
+	
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max-min+1)));
+	}
+
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	var r=15;
+	var balls = [];
+
+	var ball1 = {
+		x:20,
+		y:285,
+		r:r,
+		vx:10,
+		vy:0
+	}
+	var ball2 = {
+		x:400,
+		y:285,
+		r:r,
+		vx:-30,
+		vy:0
+	}
+	balls.push(ball1);
+	balls.push(ball2);
+
+	var cyc=100;
+	var a=10;
+
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop,canvas);
+		//context.clearRect(0,0,canvas.width,canvas.height);
+
+		context.fillStyle="rgba(0,0,0,.3)";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		context.fillStyle="#fff";
+		for(var i in balls){
+			context.beginPath();
+			context.arc(balls[i].x,balls[i].y,balls[i].r,0,Math.PI*2,true);
+			context.closePath();
+			context.fill();
+			balls[i].x+=balls[i].vx*cyc/1000;
+			balls[i].y+=balls[i].vy*cyc/1000;
+
+			if(balls[i].x+balls[i].r > canvas.width){
+				balls[i].vx*=-1;
+
+			//console.log(balls[i].position.x);
+			}
+			else if(balls[i].x-balls[i].r < 0){
+				balls[i].vx*=-1;
+			}
+
+		}
+
+		if(Math.abs(ball1.x-ball2.x)<=2*r){
+			var v = (ball1.vx+ball2.vx)/2
+			var momentumSummation = ball2.vx + ball1.vx;
+			var temp=ball2.vx;
+			//ball2.vx=ball1.vx*0.65;
+			//ball1.vx=momentumSummation-ball2.vx;
+			ball1.vx=v;
+			ball2.vx=v;
+		}
+		
+	})()
+</script>
+</html>

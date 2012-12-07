@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+	<div id="div"></div>
+</body>
+<script src="./js/utils.js"></script>
+<script src="./js/Ball.js"></script>
+<script>
+	/*获取动画执行帧对象*/
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame   ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		function( callback ){
+		//没有浏览器支持时使用setTimeout代替
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
+
+window.onload=function(){
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+	var friction=0.01;//摩擦力系数
+	var friction2=0.992;//摩擦力系数
+	var bounce=-0.5;
+	var ball=new Ball();
+	var ball2=new Ball();
+	ball2.color = '#000';
+
+	ball.x=ball2.x=canvas.width/2;
+	ball.y=ball2.y=canvas.height/2;
+
+	ball.vx=ball2.vx=Math.random()*100-5;
+	ball.vy=ball2.vy=Math.random()*100-5;
+
+
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop,canvas);
+		context.clearRect(0,0,canvas.width,canvas.height);
+
+		var speed=Math.sqrt(ball.vx*ball.vx+ball.vy*ball.vy);
+		var angle=Math.atan2(ball.vy,ball.vx);
+		if(speed>friction){
+			speed-=friction;
+		}else{
+			speed=0;
+		}
+		ball.vx=Math.cos(angle)*speed;
+		ball.vy=Math.sin(angle)*speed;
+		ball.x+=ball.vx;
+		ball.y+=ball.vy;
+		if(ball.x+ball.radius>canvas.width){
+			ball.x=canvas.width-ball.radius;
+			ball.vx *= bounce;
+		}else if(ball.x-ball.radius<0){
+			ball.x=0+ball.radius;
+			ball.vx *= bounce;
+		}
+		if(ball.y+ball.radius>canvas.height){
+			ball.y=canvas.height-ball.radius;
+			ball.vy *= bounce;
+		}else if(ball.y-ball.radius<0){
+			ball.y=0+ball.radius;
+			ball.vy *= bounce;
+		}
+		ball.paint(context);
+
+		ball2.vx*=friction2;
+		ball2.vy*=friction2;
+		ball2.x+=ball2.vx;
+		ball2.y+=ball2.vy;
+		if(ball2.x+ball2.radius>canvas.width){
+			ball2.x=canvas.width-ball2.radius;
+			ball2.vx *= bounce;
+		}else if(ball2.x-ball2.radius<0){
+			ball2.x=0+ball2.radius;
+			ball2.vx *= bounce;
+		}
+		if(ball2.y+ball2.radius>canvas.height){
+			ball2.y=canvas.height-ball2.radius;
+			ball2.vy *= bounce;
+		}else if(ball2.y-ball2.radius<0){
+			ball2.y=0+ball2.radius;
+			ball2.vy *= bounce;
+		}
+		ball2.paint(context);
+	})()
+}
+</script>
+
+</html>

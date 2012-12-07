@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>{% if page.title %} {{ page.title }} | {% endif %} {{site.title}}</title>
+<!--[if IE]>
+	<script src="/js/html5.js" />
+<![endif]-->
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="stylesheet" href="/css/screen.css" />
+<link rel="stylesheet" href="/css/pygments.css" />
+</head>
+<body>
+	<div id="wrap" class="container_12">
+		<header class="grid_12 alpha omega">
+			{% if site.title %}
+			<h1><a href="{{site.url}}">{{site.title}}</a></h1>
+			{% endif %}
+		</header>
+		
+		<div class="clear"></div>
+		<section class="grid_8 alpha omega">{{ content }}</section>
+		<div class="clear"></div>
+
+		<footer>
+			<div class="grid_4 alpha">
+				<p>
+				{% if site.author %}{{site.author}} {% endif %}<br/>
+				{% if site.email %}{{site.email}} {% endif %}<br/>
+				</p>
+			</div>
+			<div class="grid_4">
+				<p>
+					<a href="http://twitter.com/">twitter.com</a><br />
+				</p>
+			</div>
+			<div class="grid_4 omega">
+				<a href="{{site.url}}/atom.xml" class="noul">
+					<img src="/jekyll_demo/img/rss.png" alt="Subscribe to RSS Feed" />
+				</a>
+			</div>
+		</footer>
+		<div class="clear"></div>
+	</div>
+</body>
+</html>

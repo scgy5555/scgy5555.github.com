@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="480" height="400"></canvas>
+	<div id="div"></div>
+</body>
+<script>
+	/*获取动画执行帧对象*/
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame   ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		function( callback ){
+		//没有浏览器支持时使用setTimeout代替
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
+
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+	context.fillStyle="#0f0";
+
+	function Font(style,txt,x,y,alpha){
+		this.style = style;
+		this.txt = txt;
+		this.x = x;
+		this.y = y;
+		this.alpha = alpha || 1;
+	}
+	Font.prototype={
+		drawFont:function(context){
+			context.font = this.style;
+			context.fillText(this.txt,this.x,this.y);
+			context.globalAlpha= this.alpha;
+		}
+	}
+	var 立 = new Font("bold 90px Arial","立",190,90);
+	立.drawFont(context);
+</script>
+
+</html>

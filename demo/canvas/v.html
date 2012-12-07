@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+<script src="./js/utils.js"></script>
+<script src="./js/Ball.js"></script>
+<script>
+	/*获取动画执行帧对象*/
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame   ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame    ||
+		window.oRequestAnimationFrame      ||
+		window.msRequestAnimationFrame     ||
+		function( callback ){
+		//没有浏览器支持时使用setTimeout代替
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
+
+window.onload=function(){
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+	var mouse = utils.captureMousePosition(canvas);
+	var speed = 5;
+
+	var ball = new Ball();
+	ball.x = canvas.width/2;
+	ball.y = canvas.height/2;
+
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop);
+		context.clearRect(0,0,canvas.width,canvas.height);
+
+		var dx= mouse.x-ball.x;
+		var dy= mouse.y-ball.y;
+		var angle = Math.atan2(dy,dx);
+
+		ball.vx=Math.cos(angle)*speed;
+		ball.vy=Math.sin(angle)*speed;
+		ball.x+=ball.vx;
+		ball.y+=ball.vy;
+
+		ball.paint(context);
+	})()
+}
+</script>
+
+</html>

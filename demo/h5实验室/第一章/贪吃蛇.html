@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+#canvas{
+	border:1px solid #000;
+}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400";></canvas>
+</body>
+<script>
+	/*获取动画执行帧对象*/
+	window.requestAnimFrame = (function(){
+		return function(callback){
+			animationFlag = window.setTimeout(callback,1000/60);
+		}
+	})();
+
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+
+	var direction = "right"; //按键状态
+	var gameover = false;// 游戏结束旗
+	
+	// 窗体宽高
+	var width = 10;
+	var height = 10;
+		
+
+	var p=[{
+		x:0,
+		y:0
+	},{
+		x:1,
+		y:0
+	},{
+		x:2,
+		y:0
+	}];
+	//食物位置
+	var foodPositions={
+		x:-1,
+		y:-1
+	}
+
+	var MR = Math.random;
+
+	
+
+
+
+	// 重绘蛇和食物
+	function drawSnakeAndFood(p){
+		if(foodPositions.x == -1 && foodPositions.y == -1){
+			foodPositions.x = MR()*40|0; //获取随机数并取整
+			foodPositions.y = MR()*40|0;
+		}
+		
+		context.fillStyle= "#000";//randomColor();
+		context.fillRect(foodPositions.x * width,foodPositions.y * height,height,width);
+		for (var i = 0; i < p.length; i++) {
+			context.fillStyle="#D1EEE";
+			context.fillRect(p[i].x*width,p[i].y*height,height,width);
+		}
+	}
+
+
+	function IsInSnake (bodyPositions,p) {
+		for (var i = 0; i < bodyPositions.length-1; i++) {
+			if(bodyPositions[i].x==p.x && bodyPositions[i].y==p.y){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	window.addEventListener("keydown",function(event){
+			console.log(event.keyCode);
+			switch(event.keyCode){
+				case 37://左,逆时针旋转
+					direction="left";
+					break;
+				case 39://右,顺时针旋转
+					direction="right";
+					break;
+				case 38://上，加速
+					direction="up";
+					break;
+				case 40:
+					direction="down";
+					break;
+			}
+		});
+		window.addEventListener("keyup",function(event){
+			//direction="";
+		},false);
+
+	var animationFlag = null;
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+	requestAnimFrame(animloop);
+	context.clearRect(0,0,canvas.width,canvas.height);
+
+	// 死亡判断
+	if(p[p.length-1].x<0||p[p.length-1].x>39||p[p.length-1].y<0||p[p.length-1].y>39){
+		gameover = true;
+	}
+	if(IsInSnake(p,{x:p[p.length-1].x,y:p[p.length-1].y})){
+		gameover = true;
+	}
+	//食物判断
+	if(p[p.length-1].x == foodPositions.x && p[p.length-1].y == foodPositions.y){
+		foodPositions.x = -1;
+		foodPositions.y = -1;
+	}
+	else{
+		//变长
+		p.shift();
+	}
+	if(direction == "up"){
+		 p.push({
+		 	x:p[p.length-1].x,
+		 	y:p[p.length-1].y-1
+		 })
+		console.log("↑")
+	}
+	if(direction == "right"){
+		p.push({
+			x:p[p.length - 1].x+1,
+			y:p[p.length - 1].y
+		});
+		console.log("→")
+	}
+	if(direction == "down"){
+		p.push({
+			x:p[p.length-1].x,
+			y:p[p.length-1].y+1
+		})
+		console.log("↓")
+	}
+	if(direction == "left"){
+		p.push({
+			x:p[p.length - 1].x-1,
+			y:p[p.length - 1].y
+		});
+		console.log("←")
+	}
+
+	drawSnakeAndFood(p);
+
+	if(gameover){
+		alert("gameover");
+		clearTimeout(animationFlag);
+		gameover=false;
+		
+	}
+
+	})()
+</script>
+</html>

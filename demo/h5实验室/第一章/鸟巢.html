@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+canvas{
+	border: 1px solid #000;
+	background: #000;
+}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="847" height="440"></canvas>
+</body>
+<script src="wind-all-0.7.3.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+
+
+	var px=0;
+	var py=0;
+	function init(){
+		context.strokeStyle="#fff";
+		context.translate(70,70);
+	}
+	init();
+
+	var i = 0;
+		/**
+	 * 椭圆绘制
+	 * @param  x 坐标
+	 * @param  y 坐标
+	 * @param  w 长度
+	 * @param  h 高度
+	 * @return {[type]}   [description]
+	 */
+	function drawEllipse (x,y,w,h) {
+		var k  = 0.55228475;
+		var ox = (w / 2) * k;
+		var oy = (h / 2) * k;
+		var xe = x + w;
+		var ye = y + h;
+		var xm = y + w/2;
+		var ym = y + h/2;
+
+		context.beginPath();
+		context.moveTo(x,ym);
+		context.bezierCurveTo(x,ym - oy,xm - ox,y,xm,y);
+		context.bezierCurveTo(xm + ox,y,xe,ym-oy,xe,ym);
+		context.bezierCurveTo(xe,ym - oy,xm - ox,ye,xm,ye);
+		context.bezierCurveTo(xm - ox,ye,x,ym + oy,x,ym);
+		context.stroke();
+		context.translate(x+70,y+100);
+		px=-70;
+		py=-100;
+		context.rotate(10 * Math.PI * 2/360);
+	}
+	var ct;
+	var drawAsync = eval(Wind.compile("async",function(ct){
+		while(true){
+			drawEllipse(px,py,140,200);
+			$await(Wind.Async.sleep(200,ct));
+		}
+	}))
+
+	function start(){
+		ct = new Wind.Async.CancellationToken();
+		drawAsync(ct).start();
+	}
+
+	function stop(){
+		ct.cancel();
+	}
+	
+</script>
+</html>

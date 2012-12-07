@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+<script>
+		/*获取动画执行帧对象*/	
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame   ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			window.oRequestAnimationFrame      ||
+			window.msRequestAnimationFrame     ||
+			function( callback ){
+			//没有浏览器支持时使用setTimeout代替
+				window.setTimeout(callback, 1000 / 60);
+			};
+	})();
+
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	var ball = {
+		position:{
+			x:100,
+			y:100
+		},
+		r:15,
+		vx:190,
+		vy:110
+	}
+	var cyc=100;
+	/**
+	 * 动画主循环
+	 */
+	(function animloop(){
+		requestAnimFrame(animloop,canvas);
+		context.clearRect(0,0,canvas.width,canvas.height);
+
+		context.fillStyle="rgba(0,0,0,.3)";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		context.fillStyle="#000";
+		context.beginPath();
+		context.arc(ball.position.x,ball.position.y,ball.r,0,Math.PI*2,true);
+		context.closePath();
+		context.fill();
+		
+		if(ball.position.x+ball.r > canvas.width){
+			ball.vx*=-1;
+
+			//console.log(ball.position.x);
+		}
+		else if(ball.position.x-ball.r < 0){
+			ball.vx*=-1;
+			
+		}
+
+		if(ball.position.y+ball.r>canvas.height){
+			ball.vy*=-1;			
+		}
+		else if(ball.position.y-ball.r<0){
+			ball.vy*=-1;
+		}
+
+
+		ball.position.x+=ball.vx*cyc/1000;
+		ball.position.y+=ball.vy*cyc/1000;
+	})()
+</script>
+</html>

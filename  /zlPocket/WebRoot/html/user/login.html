@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-cale=1.0, user-scalable=none;" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>用户登录</title>
+	<link rel="stylesheet" href="../../css/reset.css">
+</head>
+<body>
+	<div>
+		<select id="select">
+			<option>卡号</option>
+			<option>挂单号</option>
+		</select>
+		<input id="number" placeholder="卡号">
+		<input type="button" style="display:none" id="sao" value="扫码">
+		<input placeholder="姓名">
+		<input id="remeber" type="checkbox"><label for="remeber">记住我</label>
+		<button>登录</button>
+	</div>
+</body>
+<script src="../../js/base/sea.js"></script>
+<script>
+	seajs.config({
+		alias: {
+			'$': '../../js/base/jQuery',
+			'login': '../../js/action/login'
+		}
+	});
+	seajs.use("login",function(login){
+		login.start();
+	})
+</script>
+</html>

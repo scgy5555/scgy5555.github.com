@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+canvas{
+	border: 1px solid #000;
+	background: #000;
+}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="847" height="440"></canvas>
+</body>
+<script>
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext("2d");
+	var r = 10// 半径
+	var balls = [];// 小球数组
+	function initBall () {
+	
+	var parentBall={
+		position:{x:200,y:200},
+		r:r,
+		color:"#fff"
+	}
+
+	var firstBall = {
+		position:{x:550,y:200},
+		r:r,
+		color:randomColor()
+	}
+	
+	for (var j = 1;j<5; j++) {
+		for (var k = 0;k<j+1;k++) {
+			var ball = {
+				position:{
+					x:firstBall.position.x + j * Math.sqrt(3) * r,
+					y:firstBall.position.y - j * r + 2 * k * r
+				},
+				r:r,
+				color:randomColor()
+			};
+			balls.push(ball);
+		}
+	}
+	balls.push(firstBall);
+	balls.push(parentBall);
+}
+function draw () {
+	console.log(balls);
+	for (var i in balls) {
+		context.fillStyle=balls[i].color;
+		context.beginPath();
+		context.arc(balls[i].position.x,balls[i].position.y,
+			balls[i].r,0,Math.PI*2,true);
+		context.closePath();
+		context.fill();
+	}
+}
+function randomColor(){
+	var colorNumber = Math.random()*0xffffff|0;
+	var color='#'+('00000'+colorNumber.toString(16)).substr(-6);
+	return color;
+}
+initBall();
+draw();
+
+</script>
+</html>
