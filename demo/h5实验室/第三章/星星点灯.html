@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<style>
+	#canvas{
+		border: 1px solid #ddd;
+		background: #000;
+	}
+</style>
+<body>
+	<canvas id="canvas" width="800" height="800"></canvas>
+</body>
+<script src="easel.js"></script>
+<script src="vector3.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var stage;
+	var centreOfCirclePostion = new Vector3(300,300,0);
+	var cameraPosition = new Vector3(300,300,400);
+	
+	var r = 250,
+		distance = 300;
+
+	var starPositions = [];
+	var j = -1;
+	
+	for (var i = 0; i < 440; i++) {
+		var tempX = getRandomNumber(-250,250);
+		var tempY = getRandomNumber(-250,250);
+		j *= -1;
+		if(tempX * tempX + tempY * tempY < r*r){
+			var tempZ = j * Math.sqrt(Math.abs(r*r - tempX*tempX - tempY*tempY));
+			starPositions.push(new Vector3(tempX,tempY,tempZ));
+		}
+	}
+
+
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max-min+1)));
+	}
+
+
+
+	function degToRad(a){
+		return a * Math.PI / 180;
+	}
+
+	var currentAngle = 0;
+
+	var starPositionsForShow = [];
+	function PositionsProjection(){
+		for (var i = 0; i < starPositions.length; i++) {
+			var tempV = projection(starPositions[i]);
+			starPositionsForShow.push(tempV);
+		}
+	}
+
+	function projection(v){
+		var v1 = new Vector3();
+		v1.x = v.x * distance / Math.abs(cameraPosition.z - v.z);
+		v1.y = v.y * distance / Math.abs(cameraPosition.z - v.z);
+		v1.z = v.z;
+		return v1;
+	}
+
+	var tempStar;
+	function init(){
+		PositionsProjection();
+		stage = new Stage(canvas);
+		for (var i = 0; i < starPositions.length; i++) {
+
+			var star = new Bitmap("image/star.png");
+			star.x = centreOfCirclePostion.x + starPositionsForShow[i].x;
+			star.y = centreOfCirclePostion.y + starPositionsForShow[i].y;
+			star.scaleX = star.scaleY=0.5*distance/Math.abs(cameraPosition.z - starPositionsForShow[i].z);
+			if(starPositionsForShow[i].z>50){
+				star.alpha = 1;
+			}
+			if(starPositionsForShow[i].z<50){
+				star.alpha = 0.5;
+			}
+			stage.addChild(star);
+		}
+		Ticker.setFPS(60);
+		Ticker.addListener(window);
+	}
+
+
+	function tick(){
+		starPositionsForShow.length = 0;
+		currentAngle += 0.0005;//角度增量
+		rotateXY(degToRad(currentAngle));
+		PositionsProjection();
+	
+
+		for (var i = 0; i < starPositionsForShow.length; i++) {
+			var star = stage.getChildAt(i);
+			star.x = centreOfCirclePostion.x + starPositionsForShow[i].x;
+			star.y = centreOfCirclePostion.y + starPositionsForShow[i].y;
+			star.scaleX = star.scaleY = 0.5 * distance / Math.abs(cameraPosition.z - starPositionsForShow[i].z);
+			if(starPositionsForShow[i].z > 50){
+				star.alpha = 1;
+			}
+			if(starPositionsForShow[i].z < 50){
+				star.alpha = 0.5;
+			}
+			stage.addChild(star);
+		}
+		stage.update();
+	}
+	init();
+	
+
+	
+
+	function rotateX(angle){
+		for (var i = 0; i < starPositions.length; i++) {
+			var tempY = starPositions[i].y;
+
+			starPositions[i].y = starPositions[i].y * Math.cos(angle) - starPositions[i].z * Math.sin(angle);
+			starPositions[i].z = tempY * Math.sin(angle) + starPositions[i].z * Math.cos(angle);
+		}
+	}
+
+	function rotateY(angle){
+		for (var i = 0; i < starPositions.length; i++) {
+			var tempX = starPositions[i].x;
+
+			starPositions[i].x = starPositions[i].x * Math.cos(angle) - starPositions[i].z * Math.sin(angle);
+			starPositions[i].z = starPositions[i].z * Math.cos(angle) + tempX * Math.sin(angle);
+		}
+	}
+
+	function rotateXY(angle){
+		for (var i = 0; i < starPositions.length; i++) {
+			var tempX = starPositions[i].x;
+			var tempZ = starPositions[i].z;
+
+			starPositions[i].x = starPositions[i].x * Math.cos(angle) - starPositions[i].z * Math.sin(angle);
+			starPositions[i].z = starPositions[i].z * Math.cos(angle) + tempX * Math.sin(angle);
+		}
+		for (var i = 0; i < starPositions.length; i++) {
+			var tempY = starPositions[i].y;
+			starPositions[i].y = starPositions[i].y * Math.cos(angle) - starPositions[i].z * Math.sin(angle);
+			starPositions[i].z = tempY * Math.sin(angle) + starPositions[i].z * Math.cos(angle);
+		}
+	}
+
+
+</script>
+</html>

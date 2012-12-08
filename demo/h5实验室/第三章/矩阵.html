@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<style>
+	#canvas{
+		border: 1px solid #ddd;
+		background: #000;
+	}
+</style>
+<body>
+	<canvas id="canvas" width="800" height="800"></canvas>
+</body>
+<script src="wind.js"></script>
+<script src="Vector4.js"></script>
+<script src="Matrix4.js"></script>
+<script>
+	
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	content.lineWidth=3;
+	var starX = 250;
+	var starY = 250;
+	var distance = 500;
+	var eyePosition={
+		x:0,
+		y:0,
+		z:700
+	}
+
+	var Points = []
+	function init(){
+		Points[0] = new Vector4(100,100,100,1);
+		Points[1] = new Vector4(100,100,-100,1);
+		Points[2] = new Vector4(-100,100,-100,1);
+		Points[3] = new Vector4(-100,100,100,1);
+		Points[4] = new Vector4(100,-100,100,1);
+		Points[5] = new Vector4(100,-100,-100,1);
+		Points[6] = new Vector4(-100,-100,-100,1);
+		Points[7] = new Vector4(-100,-100,100,1);
+	}
+
+	var m4 = new Matrix4();
+	var angle = 0;
+	var currentAngle = 0;
+	// 旋转
+	function transformX(){
+		angle = degToRad(currentAngle);
+		init();
+		m4.n11 = Math.cos(angle);
+		m4.n13 = -Math.sin(angle);
+		m4.n31 = Math.sin(angle);
+		m4.n33 = Math.cos(angle);
+
+		for (var i = 0; i < Points.length; i++) {
+			Points[i] = m4.multiplyVector4(Points[i]);
+		}
+	}
+	// 移动
+	function transform2(){
+		angle = degToRad(currentAngle);
+		init();
+		m4.n41++;
+		m4.n42++;
+		m4.n43++;
+
+		for (var i = 0; i < Points.length; i++) {
+			Points[i] = m4.multiplyVector4(Points[i]);
+		}
+	}
+	// 切变
+	function transform3(){
+		angle = degToRad(currentAngle);
+		init();
+		m4.n21 += 0.01;
+
+		for (var i = 0; i < Points.length; i++) {
+			Points[i] = m4.multiplyVector4(Points[i]);
+		}
+	}
+	// 比例
+	function transform3(){
+		angle = degToRad(currentAngle);
+		init();
+		m4.n11 += 0.01;
+		m4.n22 += 0.01;
+		m4.n33 += 0.01;
+
+		for (var i = 0; i < Points.length; i++) {
+			Points[i] = m4.multiplyVector4(Points[i]);
+		}
+	}
+
+	function changedistance(){
+		for (var i = 0; i < Points.length; i++) {
+			Points[i].x = Points[i].x * distance / Math.abs(eyePosition.z - Points[i].z);
+			Points[i].y = Points[i].y * distance / Math.abs(eyePosition.z - Points[i].z);
+		}
+	}
+
+	function degToRad(a){
+		return a * Math.PI / 180;
+	}
+	
+	function randomColor(){
+		var arrHex = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		var strHex = "#";
+		var index;
+		for (var i = 0; i < 6; i++) {
+			index = Math.round(Math.random()*15);
+			strHex += arrHex[index];
+		}
+		return strHex;
+	}
+
+	
+
+	function drawCube(){
+		transform3();
+
+		changedistance();
+		
+		content.strokeStyle = randomColor();
+		content.beginPath();
+
+		content.moveTo(starX + Points[0].x,starY - Points[0].y)
+		content.lineTo(starX + Points[1].x,starY - Points[1].y)
+		content.lineTo(starX + Points[2].x,starY - Points[2].y)
+		content.lineTo(starX + Points[3].x,starY - Points[3].y)
+		content.lineTo(starX + Points[0].x,starY - Points[0].y)
+
+		content.moveTo(starX + Points[4].x,starY - Points[4].y)
+		content.lineTo(starX + Points[5].x,starY - Points[5].y)
+		content.lineTo(starX + Points[6].x,starY - Points[6].y)
+		content.lineTo(starX + Points[7].x,starY - Points[7].y)
+		content.lineTo(starX + Points[4].x,starY - Points[4].y)
+
+		content.moveTo(starX + Points[1].x,starY - Points[1].y)
+		content.lineTo(starX + Points[5].x,starY - Points[5].y)
+
+		content.moveTo(starX + Points[0].x,starY - Points[0].y)
+		content.lineTo(starX + Points[4].x,starY - Points[4].y)
+
+		content.moveTo(starX + Points[2].x,starY - Points[2].y)
+		content.lineTo(starX + Points[6].x,starY - Points[6].y)
+
+		content.moveTo(starX + Points[3].x,starY - Points[3].y)
+		content.lineTo(starX + Points[7].x,starY - Points[7].y)
+
+		content.stroke();
+	}
+	drawCube();
+
+	var rotateAsync = eval(Wind.compile("async",function(){
+		while(true){
+			content.clearRect(0, 0, canvas.width, canvas.height);
+
+			currentAngle += 5;
+			drawCube();
+			$await(Wind.Async.sleep(100));
+		}
+	}));
+	rotateAsync().start();
+</script>
+</html>

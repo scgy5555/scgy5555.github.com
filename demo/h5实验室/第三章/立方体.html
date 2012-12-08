@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<style>
+	#canvas{
+		border: 1px solid #ddd;
+	}
+</style>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+<script src="wind.js"></script>
+<script src="vector3.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	content.lineWidth=3;
+
+	var Points = [];
+	var translateX = 250;
+	var translateY = 250;
+
+	var distance = 500;
+	var eyePosition = new Vector3(0,0,700);
+
+	content.translate(translateX,translateY);
+	content.scale(1,-1);
+
+	function init(){
+		Points[0] = new Vector3(100,100,100);
+		Points[1] = new Vector3(100,100,-100);
+		Points[2] = new Vector3(-100,100,-100);
+		Points[3] = new Vector3(-100,100,100);
+		Points[4] = new Vector3(100,-100,100);
+		Points[5] = new Vector3(100,-100,-100);
+		Points[6] = new Vector3(-100,-100,-100);
+		Points[7] = new Vector3(-100,-100,100);
+	}
+
+	function rotateX(angle){
+		for (var i = 0; i < Points.length; i++) {
+			var tempY = Points[i].y;
+
+			Points[i].y = Points[i].y * Math.cos(angle) - Points[i].z * Math.sin(angle);
+			Points[i].z = tempY * Math.sin(angle) + Points[i].z * Math.cos(angle);
+		}
+	}
+
+	function rotateY(angle){
+		for (var i = 0; i < Points.length; i++) {
+			var tempX = Points[i].x;
+
+			Points[i].x = Points[i].x * Math.cos(angle) - Points[i].z * Math.sin(angle);
+			Points[i].z = Points[i].z * Math.cos(angle) + tempX * Math.sin(angle);
+		}
+	}
+
+	function rotateXY(angle){
+		for (var i = 0; i < Points.length; i++) {
+			var tempX = Points[i].x;
+			var tempZ = Points[i].z;
+
+			Points[i].x = Points[i].x * Math.cos(angle) - Points[i].z * Math.sin(angle);
+			Points[i].z = Points[i].z * Math.cos(angle) + tempX * Math.sin(angle);
+		}
+		for (var i = 0; i < Points.length; i++) {
+			var tempY = Points[i].y;
+			Points[i].y = Points[i].y * Math.cos(angle) - Points[i].z * Math.sin(angle);
+			Points[i].z = tempY * Math.sin(angle) + Points[i].z * Math.cos(angle);
+		}
+	}
+
+	function changeDistance () {
+		for (var i = 0; i < Points.length; i++) {
+			Points[i].x = Points[i].x * distance / Math.abs(eyePosition.z - Points[i].z);
+			Points[i].y = Points[i].y * distance / Math.abs(eyePosition.z - Points[i].z);
+		}
+	}
+
+	function degToRad(a){
+		return a * Math.PI / 180;
+	}
+
+	function randomColor(){
+		var arrHex = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		var strHex = "#";
+		var index;
+		for (var i = 0; i < 6; i++) {
+			index = Math.round(Math.random()*15);
+			strHex += arrHex[index];
+		}
+		return strHex;
+	}
+
+	function drawCube(){
+		content.strokeStyle = randomColor();
+		content.beginPath();
+		content.moveTo(Points[0].x,Points[0].y)
+		content.lineTo(Points[1].x,Points[1].y)
+		content.lineTo(Points[2].x,Points[2].y)
+		content.lineTo(Points[3].x,Points[3].y)
+		content.lineTo(Points[0].x,Points[0].y)
+
+		content.moveTo(Points[4].x,Points[4].y)
+		content.lineTo(Points[5].x,Points[5].y)
+		content.lineTo(Points[6].x,Points[6].y)
+		content.lineTo(Points[7].x,Points[7].y)
+		content.lineTo(Points[4].x,Points[4].y)
+
+		content.moveTo(Points[1].x,Points[1].y)
+		content.lineTo(Points[5].x,Points[5].y)
+
+		content.moveTo(Points[0].x,Points[0].y)
+		content.lineTo(Points[4].x,Points[4].y)
+
+		content.moveTo(Points[2].x,Points[2].y)
+		content.lineTo(Points[6].x,Points[6].y)
+
+		content.moveTo(Points[3].x,Points[3].y)
+		content.lineTo(Points[7].x,Points[7].y)
+
+		content.stroke();
+	}
+	init();
+	drawCube();
+	var currentAngle = 0;
+	var rotateAsync = eval(Wind.compile("async",function(){
+		while(true){
+			content.clearRect(-translateX,-translateY,canvas.width,canvas.height);
+			init();
+			//rotateX(degToRad(currentAngle));
+			rotateXY(degToRad(currentAngle));
+			currentAngle+=5;
+			changeDistance();
+			drawCube();
+			$await(Wind.Async.sleep(100));
+		}
+	}));
+
+	var reduceDrawCubeAsync = eval(Wind.compile("async",function(){
+		while(distance < 750){
+			content.clearRect(-translateX,-translateY,canvas.width,canvas.height);
+			init();
+			distance += 10;
+			changeDistance();
+			drawCube(10);
+			$await(Wind.Async.sleep(100));
+		}
+	}));
+
+	var magnifyDrawCubeAsync = eval(Wind.compile("async",function(){
+		while(distance > 150){
+			content.clearRect(-translateX,-translateY,canvas.width,canvas.height);init();
+			distance -= 10;
+			changeDistance();
+			drawCube(-10);
+			$await(Wind.Async.sleep(100));
+		}
+	}))
+
+	var executeAsync = eval(Wind.compile("async",function(){
+		$await(reduceDrawCubeAsync());
+		$await(magnifyDrawCubeAsync());
+	}))
+	//executeAsync().start();
+	rotateAsync().start();
+</script>
+</html>
