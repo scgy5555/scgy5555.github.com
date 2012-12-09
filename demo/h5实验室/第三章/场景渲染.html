@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<style>
+	#canvas{
+		border: 1px solid #ddd;
+	}
+</style>
+<body>
+	<canvas id="canvas" width="200" height="200"></canvas>
+</body>
+<script src="wind.js"></script>
+<script src="vector3.js"></script>
+<script>
+	var Camera = function(position){
+		this.position = position;
+	}
+	var k = 0;
+	var m = 200;
+	var n = 1000;
+	var c = new Camera(new Vector3(k,m,n));
+	var distance = 100;
+
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	var w = canvas.width;
+	var h = canvas.height;
+
+	var imgdata = content.getImageData(0,0,200,200);
+
+
+	function render() {
+		var i = 0;
+		var pixels = imgdata.data;
+		for (var y = 0; y < h; y++) {
+			for (var x = 0; x < w; x++) {
+				var a = -100 + x;
+				var b = 200 - y;
+				var v = new Vector3(a,b,0);
+				// 地面
+				var cv = new Vector3(m*a / (m-b), 0, n*b / (b-m));
+				// 左墙
+				var cx100 = new Vector3(100,(m*a-100*m+100*b)/a,(a*n-100*n)/a);
+				// 右墙
+				var cxx100 = new Vector3(-100,(m*a+100*m-100*b)/a,(a*n+100*n)/a);
+
+				if(a < 0 && cxx100.y>0&&cxx100.y<150&&cxx100.z>-4400){	
+					pixels[i]=151;
+					pixels[i+1]=getRandomNumber(163,255);
+					pixels[i+2]=5;
+					pixels[i+3]=255*(4400-Math.abs(cxx100.z))/4400;
+				}
+
+				else if(a > 0 && cx100.y>0&&cx100.y<150&&cx100.z>-4400){
+					pixels[i]=151;
+					pixels[i+1]=getRandomNumber(163,255);
+					pixels[i+2]=5;
+					pixels[i+3]=255*(4400-Math.abs(cx100.z))/4400;
+				}
+
+
+				else if(Math.abs(cv.x) < 100 && cv.z > -4400 && cv.z < 0){
+					pixels[i] = 111;
+					pixels[i+1]=111;
+					pixels[i+2]=255;
+					pixels[i+3]=255*(4400-Math.abs(cv.z))/4400;
+				}
+				i+=4;
+			}
+		}
+		content.putImageData(imgdata,0,0);
+	}
+
+	render();
+	function getRandomNumber(min,max){
+		return (min + Math.floor(Math.random()* max - min+1));
+	}
+</script>
+</html>
