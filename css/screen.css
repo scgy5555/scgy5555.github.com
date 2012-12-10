@@ -29,6 +29,7 @@ a
   text-decoration: none;
   border-bottom: solid 1px #3030a2;
 }
+#uyan_frame a{text-decoration:underline}
 a:hover
 {
   text-decoration: none;
