@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="1150" height="400"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	/**
+	 * 绘制正多边形
+	 * @param  borderCount 边数
+	 * @param  position 中心位置
+	 * @param  radius 半径
+	 */
+	function drawRegular(borderCount,position,radius) {
+		if(borderCount < 3){
+			return;
+		}
+		var intervalAngle = 360 / borderCount;
+		var firstPoint = new Vector2(position.x,position.y - radius);
+		content.beginPath();
+		content.moveTo(firstPoint.x,firstPoint.y);
+		for (var i = 0; i < borderCount; i++) {
+			firstPoint.rotateSelf(position,intervalAngle);
+			content.lineTo(firstPoint.x,firstPoint.y);
+		}
+		content.stroke();
+	}
+	var beginX = 20,
+		cyc = 1000,
+		borderCount = 3;
+
+	var drawAsync = eval(Wind.compile("async",function(){
+		while(true){
+			beginX += 80
+			drawRegular(borderCount,new Vector2(beginX,100),40);
+			borderCount++;
+			$await(Wind.Async.sleep(cyc));
+		}
+	}));
+	drawAsync().start();
+</script>
+</html>
