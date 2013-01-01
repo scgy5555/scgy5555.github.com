@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="600" height="500"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+
+	var balls = [];
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max - min+1)))
+	}
+	function initBall(){
+		for (var i = 0; i < 500; i++) {
+			var ball = {
+				position:new Vector2(300,250),
+				r:2,
+				v:getRandomNumber(3,200),
+				direction:(getRandomNumber(0,360)/360) * 2 * Math.PI
+			}
+			balls.push(ball);
+		}
+	}
+	initBall();
+
+	var moveAsync = eval(Wind.compile("async",function(){
+		var t = 0;
+		while(true){
+			var ballColor = randomColor();
+			while(true){
+				try{
+					t += cyc;
+					content.globalAlpha = 1;
+					content.fillStyle = "rgba(0,0,0,.3)";
+					content.fillRect(0,0,canvas.width,canvas.height);
+					content.fillStyle = ballColor;
+
+					if(t>1111){
+						t = 0;
+						balls.length=0;
+						initBall();
+						content.fillStyle = "#000000";
+						content.fillRect(0,0,canvas.width,canvas.height);
+						break;
+					}
+					content.globalAlpha = (1111-t)/1111;
+
+					for(i in balls){
+						content.beginPath();
+						content.arc(balls[i].position.x,balls[i].position.y,balls[i].r,0,Math.PI * 2,true);
+						content.closePath();
+						content.fill();
+						balls[i].position.x +=balls[i].v*Math.cos(balls[i].direction)* cyc/1000;
+						balls[i].position.y +=balls[i].v*Math.sin(balls[i].direction)* cyc/1000;
+					}
+				}
+				catch(e){
+					console.log(e);
+				}
+				$await(Wind.Async.sleep(cyc));
+			}
+			$await(Wind.Async.sleep(100));
+		}
+	}))
+	
+	function randomColor(){
+		var arrHex = ["#FFFF00","#ADFF2F","#7CFC00","#8DEEEE","#00FF00","#EE6AA7","#E0FFFF","#FFFFFF"];
+		var strHex = "#";
+		var index = Math.round(Math.random()*7);
+		return arrHex[index];
+	}
+
+	var cyc = 10;
+
+	moveAsync().start();
+</script>
+</html>
