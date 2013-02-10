@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	content.strokeStyle = "#f00";
+	content.translate(300,100);
+
+	window.addEventListener("load",draw,false);
+
+	function draw() {
+		var r = 0,
+			a = 20,
+			start = 0,
+			end = 0;
+		content.rotate(Math.PI);
+		for (var i = 0; i < 1000; i++) {
+			start += Math.PI * 2 / 1000;
+			end = start + Math.PI * 2 / 1000;
+			r = a * Math.sqrt(255/(17 - 16 *Math.sin(start)*Math.sqrt(Math.cos(start)*Math.cos(start))));
+			content.arc(0,0,r,start,end,false);
+		}
+		content.fill();
+	}
+
+</script>
+</html>

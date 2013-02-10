@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+		
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="1300" height="600"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script src="CanvasText.js"></script>
+<script>
+	var 
+		canvas = document.getElementById('canvas'),// 画布对象
+		cxt = canvas.getContext("2d");// 绘制对象
+	cxt.fillStyle = '#030303';
+	cxt.fillRect(0,0,canvas.width,canvas.height);
+
+	var img = new Image();
+	img.src = 'http://images.cnblogs.com/cnblogs_com/iamzhanglei/p1.png';
+
+	var
+		cyc = 10,// 间隔时间
+		a = 20,// 重力加速度
+		balls = [],// 球集合
+		ball ={// 球对象
+			x:640,//   横坐标
+			y:520,//   纵坐标
+			r:28,//    半径
+			vx:0,//    横向速度
+			vy:-1250// 纵向速度
+		};
+	
+	balls.push(ball);
+	/* 烟花发射 */
+	var fireAsync = eval(Wind.compile("async",function(){
+		// 如果横坐标大于220
+		while(ball.y > 220){
+			cxt.fillStyle = "rgba(0,0,0,.3)";// 设置背景色
+			cxt.fillRect(0,0,canvas.width,canvas.height);// 清空图层
+			cxt.fillStyle = '#fff';
+			cxt.drawImage(img,600,500);// 绘制图片
+			cxt.globalAlpha = 1;// 透明度
+
+			for(var i in balls){
+				cxt.beginPath();
+				cxt.arc(balls[i].x,balls[i].y,balls[i].r,0,Math.PI * 2,true)// 绘制球
+				cxt.closePath();
+				cxt.fill();
+				balls[i].y += balls[i].vy * cyc / 1000;
+				balls[i].x += balls[i].vx * cyc / 1000;
+				// 如果球超出屏幕
+				if(balls[i].r + balls[i].y >= canvas.height){
+					// 并且有速度
+					if(balls[i].vy > 0){
+						balls[i].vy *= -0.7 //速度取反
+					}
+				}
+				else{
+					balls[i].vy += a;
+				}
+			}
+
+			$await(Wind.Async.sleep(cyc));
+		}
+	}));
+	// fireAsync().start();
+	
+	/**
+	 * 获取随机数
+	 * @param min 最小范围
+	 * @param max 最大范围
+	 * @return 随机数
+	 */
+	function getRandomNumber(min,max) {
+		return (min+Math.floor(Math.random()*(max-min+1)));
+	}
+
+	/**
+	 * 随机色
+	 * @return 颜色数值
+	 */
+	function randomColor(){
+		var arrHex = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		var strHex = "#";
+		var index;
+		for (var i = 0; i < 6; i++) {
+			index = Math.round(Math.random()*15);
+			strHex += arrHex[index];
+		}
+		return strHex;
+	}
+
+	/* 烟花爆炸 */
+	var ball2s = [];// 清空集合
+	for (var i = 0; i < 900; i++){
+		var ball2 = {
+			position:new Vector2(630,220),// 初始位置
+			r:getRandomNumber(1,4),//        半径
+			vx:getRandomNumber(-200,200),//  横向速度
+			vy:getRandomNumber(-200,200),//  纵向速度
+			color:randomColor()//            随机色
+		};
+		ball2s.push(ball2);
+	}
+
+	var t = 0;// 计时器
+	var explodeAsync = eval(Wind.compile("async",function(){
+		while(true){
+			try{
+				// 如果累计到1000,清空并跳出循环
+				if(t>1000){
+					t = 0;
+					break;
+				}
+				t += cyc;
+				cxt.fillStyle = 'rgba(0,0,0,.3)';
+				cxt.fillRect(0,0,canvas.width,canvas.height);
+				cxt.drawImage(img,600,500);
+				for (var i in ball2s){
+					cxt.fillStyle = ball2s[i].color;
+					cxt.beginPath();
+					cxt.arc(ball2s[i].position.x,ball2s[i].position.y,ball2s[i].r,0,Math.PI * 2,true);
+					cxt.closePath();
+					cxt.fill();
+
+					if(ball2s[i].r + ball2s[i].position.x > canvas.width || ball2s[i].x < ball2s[i].r){
+						ball2s[i].vx *= -1;
+					}
+					if(ball2s[i].r + ball2s[i].position.y > canvas.height || ball2s[i].y < ball2s[i].r){
+						ball2s[i].vy *= -1;
+					}
+
+					ball2s[i].position.x += ball2s[i].vx * cyc / 1000;
+					ball2s[i].position.y += ball2s[i].vy * cyc / 1000;
+
+				}
+			}
+			catch(e){
+				alert(e);
+			}
+			$await(Wind.Async.sleep(cyc));
+		}
+	}))
+	// explodeAsync().start();
+	
+	/* 绘制心 */
+	var 
+		heartR = 110,// 心半径
+		time = 0;// 计时器
+
+	var dropAsync = eval(Wind.compile("async",function(){
+		while(true){
+			time += cyc;
+			
+			// var count = 0;
+			try{
+				cxt.fillStyle = 'rgba(0,0,0,.3)';
+				cxt.fillRect(0,0,canvas.width,canvas.height);
+				cxt.drawImage(img,600,500);
+				for (var i in ball2s){
+					cxt.fillStyle = ball2s[i].color;
+					cxt.beginPath();
+					cxt.arc(ball2s[i].position.x,ball2s[i].position.y,ball2s[i].r,0,Math.PI * 2,true);
+					cxt.closePath();
+					cxt.fill();
+
+					ball2s[i].position.y += ball2s[i].vy * cyc /1000;
+					ball2s[i].position.x += ball2s[i].vx * cyc /1000;
+
+					if(ball2s[i].r+ball2s[i].position.x > canvas.width){
+						ball2s[i].position.x = canvas.width - ball2s[i].r;
+						ball2s[i].vx *= -0.9;
+					}
+					if(ball2s[i].position.x < ball2s[i].r){
+						ball2s[i].position.x = ball2s[i].r;
+						ball2s[i].vx *= -0.9;
+					}
+
+					if(ball2s[i].r+ball2s[i].position.y > canvas.width){
+						ball2s[i].position.y = canvas.height - ball2s[i].r;
+						ball2s[i].vx *= -0.5;
+					}
+					if(ball2s[i].position.y < ball2s[i].r){
+						ball2s[i].position.y = ball2s[i].r;
+						ball2s[i].vx *= -0.5;
+					}
+
+					var
+						x = ball2s[i].position.x - 630,
+						y = 220 - ball2s[i].position.y,
+						result = 
+						((x / heartR)*(x / heartR) + (y / heartR)*(y / heartR) -1) *
+						((x / heartR)*(x / heartR) + (y / heartR)*(y / heartR) -1) *
+						((x / heartR)*(x / heartR) + (y / heartR)*(y / heartR) -1) -
+						(x / heartR)*(x / heartR)*(y / heartR)*(y / heartR)*(y / heartR);
+					if(result > 0){
+						ball2s[i].vy += 140;
+					}
+					else{
+						ball2s[i].vy = 0;
+						ball2s[i].vx = 0;
+						// count++;
+					}
+					// if(result < 0){
+					// 	cxt.beginPath();
+					// 	cxt.arc(ball2s[i].position.x,ball2s[i].position.y,ball2s[i].r,0,Math.PI * 2,true);
+					// 	cxt.closePath();
+					// 	cxt.fill();
+					// }
+					// else{
+					// 	ball2s[i].vy *= -1;
+					// 	ball2s[i].vx *= -1;
+					// }
+				}
+			}
+			catch(e){
+				alert(e);
+			}
+			if(time>800){
+				time = 0;
+				break;
+			}
+			
+			// if(count<20){break;}
+			$await(Wind.Async.sleep(cyc));
+		}
+	}))
+	
+	// dropAsync().start();
+	/* 绘制字母 */
+	var dTime = 0;
+	var CT = new CanvasText();
+	var drawAsync = eval(Wind.compile("async",function(){
+		while(true){
+			dTime += 100;
+			CT.config({
+				canvas:canvas,
+				context:cxt,
+				fontFamily:'Verdana',
+				fontSize:'162px',
+				fontColor:'#ff5e99',
+				fontFamily:'Times new roman',
+				fontWeight:'bold',
+				fontStyle:'italic'
+			});
+			var textI = 'I';
+			CT.drawText({
+				text:textI,
+				x:330,
+				y:270,
+				boxWidth:1555
+			});
+
+			var textU = 'U';
+			CT.drawText({
+				text:textU,
+				x:800,
+				y:270,
+				boxWidth:1555
+			});
+
+			if(dTime > 800){
+				dTime = 0;
+				break;
+			}
+
+			$await(Wind.Async.sleep(100));
+		}
+	}))
+	// drawAsync().start();
+
+
+	/* 总控制 */
+	var qAsync = eval(Wind.compile("async",function(){
+		
+			// 发射
+			$await(fireAsync());
+			// 爆炸
+			$await(explodeAsync());
+			// 心形
+			$await(dropAsync());
+			// 文字
+			$await(drawAsync());
+
+			$await(Wind.Async.sleep(100));
+		
+	}))
+
+	qAsync().start()
+</script>
+</html>

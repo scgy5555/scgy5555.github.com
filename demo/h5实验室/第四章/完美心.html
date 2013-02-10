@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+<script src="Wind.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	content.lineWidth = 16;
+	var startX = 200;
+	var startY = 200;
+
+	function getHeartPoint(c){
+		var b = c/Math.PI;
+		var a = 10*(16*Math.pow(Math.sin(b),3));
+		var d = 10*(13*Math.cos(b)-5*Math.cos(2*b)-2*Math.cos(3*b)-Math.cos(4*b));
+		return new Array(a,d);
+	}
+
+	var drawHeart = eval(Wind.compile("async",function(){
+
+		for (var i = 10; i < 30; i+=0.2) {
+			content.strokeStyle = randomColor();
+			var h = getHeartPoint(i);
+			content.lineTo(startX+h[0],startY-h[1]);
+			content.stroke();
+			$await(Wind.Async.sleep(20));
+		}
+		// for (var i = 10; i < 30; i+=0.2) {
+		// 	var img = new Image();
+		// 	img.src = 'image/star.png';
+
+		// 	img.onload = function(){
+		// 		var h = getHeartPoint(i);
+		// 		content.drawImage(img,startX+h[0],startY-h[1]);
+		// 	}
+		// 	$await(Wind.Async.sleep(20));
+		// }
+	}))
+
+	function randomColor(){
+		var arrHex = ["#f00"];
+		return arrHex[0];
+	}	
+
+	drawHeart().start();
+</script>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="400"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script>
+	var canvas = document.getElementById('canvas');
+	var content = canvas.getContext("2d");
+	content.lineWidth = 6;
+	content.strokeStyle = "#ff0000";
+	content.translate(150,100);
+	content.scale(1,-1);
+	content.beginPath();
+	// 笛卡尔
+	var drawHeart = eval(Wind.compile("async",function(){
+		var a = 102;
+		for (var i = -5; i < 360; i++) {
+			x = a*(1-Math.sin(i * Math.PI/180))*Math.cos(i * Math.PI/180);
+			
+			y = a*(1-Math.sin(i*Math.PI/180))*Math.sin(i*Math.PI/180);
+			content.lineTo(x,y);
+			content.stroke();
+			$await(Wind.Async.sleep(10));
+		}
+	}));
+	drawHeart().start();
+</script>
+</html>
