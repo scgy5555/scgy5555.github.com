@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	#div1{
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		background: red;
+	}
+	.box{
+		border: 1px dashed #000;
+		position: absolute;
+	}
+</style>
+</head>
+<body>
+<div id="div2">
+	<div id="div1"></div>
+</div>
+</body>
+<script>
+	var oDiv = document.getElementById('div1'),
+		disX = 0,
+		disY = 0;
+
+	oDiv.onmousedown = function(ev){
+		disX = ev.clientX - oDiv.offsetLeft;
+		disY = ev.clientY - oDiv.offsetTop;
+
+		var oBox = document.createElement('div');
+			oBox.className = 'box';
+			console.log(oDiv.style);
+			oBox.style.width = oDiv.offsetWidth+"px";
+			oBox.style.height = oDiv.offsetHeight+"px";
+			oBox.style.top = oDiv.offsetTop+"px";
+			oBox.style.left = oDiv.offsetLeft+"px";
+
+			document.body.appendChild(oBox);
+
+		document.onmousemove = function(ev){
+			var l = ev.clientX - disX,
+				t = ev.clientY - disY;
+
+			if(l<0){
+				l = 0;
+			}
+			else if(l > document.offsetWidth - oDiv.offsetWidth){
+				l = document.offsetWidth - oDiv.offsetWidth
+			}
+			
+			if(t<0){
+				t = 0
+			}else if(t > document.offsetHeight - oDiv.offsetHeight){
+
+				t = document.offsetHeight - oDiv.offsetHeight;
+			}
+
+
+
+			oBox.style.left = l +"px";
+			oBox.style.top = t +"px";
+		}
+		document.onmouseup = function(ev){	
+			document.onmousemove = null;
+			document.onmouseup = null;
+
+			oDiv.style.left = oBox.offsetLeft +"px"
+			oDiv.style.top = oBox.offsetTop +"px"
+			document.body.removeChild(oBox);
+		}
+
+		return false;
+	}
+
+</script>
+</html>
