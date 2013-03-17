@@ -197,11 +197,11 @@ $(function() {
 			
 			if(moveDirect == 'next'){
 				index += 1;
-				if(index >= len) {index = 0;}
+				if(index >= len) {index = len - 1;}
 			}
 			else if(moveDirect=='pre'){
 				index -= 1;
-				if(index <= -1) {index = len - 1;}	
+				if(index <= -1) {index = 0;}	
 			}
 			console.log("结果"+index);
 
