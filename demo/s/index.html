@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>轮播</title>
+<link rel="stylesheet" href="reset.css">
+<style type="text/css">
+.clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+
+.wrapper {margin:0px auto;}
+
+/* qqshop focus */
+#focus {width:400px; height:140px; overflow:hidden; position:relative;}
+#focus ul {height:280px; position:absolute;
+	transform:translateX(0) translateZ(0);
+	-webkit-transform:translateX(0) translateZ(0);
+}
+#focus ul li {float:left; width:400px; height:140px; overflow:hidden; position:relative; background:#000;}
+#focus ul li img{width:400px;}
+#focus ul li div {position:absolute; overflow:hidden;}
+#focus .btnBg {position:absolute; width:800px; height:20px; left:0; bottom:0; background:#000;}
+#focus .btn {position:absolute; width:780px; height:10px; padding:5px 10px; right:0; bottom:0; text-align:right;}
+#focus .btn span {display:inline-block; _display:inline; _zoom:1; width:25px; height:10px; _font-size:0; margin-left:5px; cursor:pointer; background:#fff;}
+#focus .btn span.on {background:#fff;}
+#focus .preNext {width:45px; height:100px; position:absolute; top:90px; background:url(img/sprite.png) no-repeat 0 0; cursor:pointer;}
+#focus .pre {left:0;}
+#focus .next {right:0; background-position:right top;}
+
+
+#c{
+	width: 200px;
+	position: absolute;
+	bottom: 0;
+	height: 40px;
+	border: 1px solid #000;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+	<!--<h1>jQuery2012QQ商城焦点图效果</h1>-->
+	<div id="focus">
+		<ul>
+			<li>
+				
+					<img src="img/01.jpg" alt="轮播" />
+				
+			</li>
+			<li>
+				
+					<img src="img/02.jpg" alt="轮播" />
+				
+			</li>
+			<li>
+				
+					<img src="img/03.jpg" alt="轮播" />
+				
+			</li>
+			<li>
+				
+					<img src="img/04.jpg" alt="轮播" />
+				
+			</li>
+		</ul>
+	</div>
+	<div id="c"></div>
+</div>
+<!-- wrapper end -->
+</body>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+var dummyStyle = document.createElement('div').style,
+	vendor = (function () {
+		var vendors = 't,webkitT,MozT,msT,OT'.split(','),
+			t,
+			i = 0,
+			l = vendors.length;
+
+		for ( ; i < l; i++ ) {
+			t = vendors[i] + 'ransform';
+			if ( t in dummyStyle ) {
+				return vendors[i].substr(0, vendors[i].length - 1);
+			}
+		}
+
+		return false;
+	})(),
+	hasTouch = 'ontouchstart' in window,
+	RESIZE_EV = 'onorientationchange' in window ? 'orientationchange' : 'resize',
+	START_EV = hasTouch ? 'touchstart' : 'mousedown',
+	MOVE_EV = hasTouch ? 'touchmove' : 'mousemove',
+	END_EV = hasTouch ? 'touchend' : 'mouseup',
+	CANCEL_EV = hasTouch ? 'touchcancel' : 'mouseup',
+	TRNEND_EV = (function () {
+		if ( vendor === false ) return false;
+
+		var transitionEnd = {
+				''			: 'transitionend',
+				'webkit'	: 'webkitTransitionEnd',
+				'Moz'		: 'transitionend',
+				'O'			: 'otransitionend',
+				'ms'		: 'MSTransitionEnd'
+			};
+
+		return transitionEnd[vendor];
+	})(),
+	nextFrame = (function() {
+		return window.requestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.oRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			function(callback) { return setTimeout(callback, 1); };
+	})(),
+	cancelFrame = (function () {
+		return window.cancelRequestAnimationFrame ||
+			window.webkitCancelAnimationFrame ||
+			window.webkitCancelRequestAnimationFrame ||
+			window.mozCancelRequestAnimationFrame ||
+			window.oCancelRequestAnimationFrame ||
+			window.msCancelRequestAnimationFrame ||
+			clearTimeout;
+	})()
+
+var matrixToArray = function(matrix) {
+	return matrix.substr(7, matrix.length - 8).split(', ');
+}
+
+$(function() {
+	var sWidth = $("#focus").width(); //获取焦点图的宽度（显示面积）
+	var len = $("#focus ul li").length; //获取焦点图个数
+	var index = 0;
+	var picTimer;// 间隔时间
+	
+	//以下代码添加数字按钮和按钮后的半透明条
+	var btn = "<div class='btnBg'></div><div class='btn'>";
+	for(var i=0; i < len; i++) {
+		btn += "<span></span>";
+	}
+	btn += "</div>";
+
+	$("#focus").append(btn);
+	$("#focus .btnBg").css("opacity",0.5);
+
+	
+	//计算出ul元素的宽度
+	$("#focus ul").css("width",sWidth * (len));
+
+	function change() {
+		showPics(index);
+		index++;
+		if(index == len) {index = 0;}
+	}
+
+
+	// picTimer = setInterval(change,3000);
+	 $("#focus").on(START_EV,function(event){
+	 	var ev = event.originalEvent;
+	 	var point = ev.changedTouches ? ev.changedTouches[0] : ev;
+	 	var startX = point.clientX;
+	 	var $ul = $(this).find('ul');
+	 	var	nowX = Number(matrixToArray($ul.css('transform'))[4]);// 当前
+	 	var moveDirect = "";
+	 	$(this).on(MOVE_EV,function(event){
+	 		var ev = event.originalEvent;
+	 		var point = ev.changedTouches ? ev.changedTouches[0] : ev;
+			var moveX = point.clientX;
+			var deltaX = moveX - startX;// 增量
+			var translateX = nowX+deltaX;
+
+			console.log('deltaX'+deltaX);
+			console.log('nowX'+Math.abs(nowX));
+
+			if(deltaX>0){
+				 // && Math.abs(deltaX) > Math.abs(nowX)/2
+				// +1
+				moveDirect = 'pre'
+				
+			}
+			else if(deltaX<0){
+				// -1
+				moveDirect = 'next'
+			}
+
+			$ul.css('transform','translateX(' + translateX + 'px) translateZ(0)');
+	 		
+
+	 	}).on(END_EV,function(event){
+	 		var ev = event.originalEvent;
+	 		var point = ev.changedTouches ? ev.changedTouches[0] : ev;
+			var endX = point.clientX;
+			console.log(moveDirect);
+			console.log("当前"+index);
+			
+			if(moveDirect == 'next'){
+				index += 1;
+				if(index == len) {index = 0;}
+			}
+			else if(moveDirect=='pre'){
+				index -= 1;
+				if(index == -1) {index = len - 1;}	
+			}
+			console.log("结果"+index);
+
+			showPics(index);
+
+	 		$(this).off(END_EV).off(MOVE_EV);
+	 	})
+	 	
+	 })
+	//点击焦点图时停止自动播放，移出时开始自动播放
+
+	// .on(START_EV,function(e){
+	// 	// $('#c').text('进入点击');
+	// 	var point = hasTouch ? e.changedTouches[0] : e,
+	// 		startX = point.clientX;
+
+	// 	clearInterval(picTimer);
+
+	// 	$('#c').text('进入点击');
+		
+		
+	// }).on(MOVE_EV,function(e){
+	// 		// var point = hasTouch ? e.changedTouches[0] : e;
+	// 		// 	moveX = point.clientX;// 移动
+				
+	// 			// $ul = $(this).find('ul'),
+	// 			// matrix = $ul.css('transform'),
+	// 			// nowX = Number(matrixToArray(matrix)[4]),// 当前
+				
+	// 			// deltaX = moveX - startX,// 增加
+	// 			// translateX = nowX + deltaX;
+
+	// 		// $ul.css('transform','translateX('+translateX+'px) translateZ(0)')
+	// 		$('#c').text('进入滑动'+e.changedTouches[0].clientX);
+	// 		console.log(translateX);
+	// 		// 'transform':'translateX('+nowLeft+'px) translateZ(0)'
+	// }).on(END_EV,function(){
+	// 	$('#c').text('移出点击');
+		
+	// })
+	
+	//显示图片函数，根据接收的index值显示相应的内容
+	function showPics(index) { //普通切换
+		var nowLeft = -index*sWidth; //根据index值计算ul元素的left值
+
+		$("#focus ul").css({
+			'transform':'translateX('+nowLeft+'px) translateZ(0)',
+			'transition':'300ms'
+		}).on(TRNEND_EV,function(){
+
+			$(this).css('transition','0')
+		});
+
+		//$("#focus .btn span").removeClass("on").eq(index).addClass("on"); //为当前的按钮切换到选中的效果
+		$("#focus .btn span").stop(true,false).animate({"opacity":"0.4"},300).eq(index).stop(true,false).animate({"opacity":"1"},300); //为当前的按钮切换到选中的效果
+	}
+});
+</script>
+</html>

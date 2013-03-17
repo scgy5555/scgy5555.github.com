@@ -1,0 +1,141 @@
+@charset "utf-8";
+
+/* 
+	@名称: fn
+	@功能: 常用功能样式
+*/
+
+/* 清理浮动 */
+.fn-clear:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+/* 隐藏, 通常用来与 JS 配合 */
+body .fn-hide {
+	visibility: hidden;
+}
+.fn-dhide{
+	display: none !important;
+}
+
+.fn-left {
+	float: left;
+}
+
+.fn-right {
+	float: right;
+}
+.fn-middle{
+	vertical-align: middle;
+}
+
+.fn-ell {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/*顶部0*/
+#content.top-0{
+	top: 0px;
+}
+
+/*顶部168*/
+#content.top-168{
+	top: 168px;
+}
+/*底部100*/
+#content.bottom-100{
+	bottom: 100px;
+}
+
+/*顶部线条*/
+#content.br{
+	border-top: 2px solid #ddd;
+}
+/*脚注顶部线条*/
+footer.br{
+	border-top: 2px solid #a6a6a6;
+}
+
+/*居中弹性盒*/
+.pg-cbox{
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: box;
+	
+	-webkit-box-align:center;
+	-ms-flex-align:center;
+	box-align:center;
+
+	-webkit-box-pack:justify;
+	-ms-flex-pack:justify;
+	box-pack:justify;
+}
+/*右对齐弹性盒*/
+.pg-ebox{
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: box;
+	
+	-webkit-box-align:center;
+	-ms-flex-align:center;
+	box-align:center;
+
+	-webkit-box-pack:end;
+	-ms-flex-pack:end;
+	box-pack:end;
+}
+/*文字两端对齐*/
+.pg-justify{
+	text-align:justify;
+	text-justify:distribute-all-lines;/*ie6-8*/
+	text-align-last:justify;/* ie9*/
+	-moz-text-align-last:justify;/*ff*/
+	-webkit-text-align-last:justify;/*chrome 20+*/
+}
+/*文字两端对齐*/
+.pg-justify::after {
+	content: ".";
+	display: inline-block;
+	width: 100%;
+	overflow: hidden;
+	height: 0;
+}
+/*inline-block*/
+.fn-inb{
+	display: inline-block;
+}
+.padding-bottom-20{
+	padding-bottom: 200px;
+}
+.padding-bottom-N20{
+	padding-bottom: 200px;
+}
+/*小分辨率*/
+@media screen and (max-width: 479px) {
+	/*高度116*/
+	#content{
+		top: 58px !important; 
+	}
+	/*高度0*/
+	#content.top-0{
+		top: 0 !important;
+	}
+	/*高度168*/
+	#content.top-168{
+		top: 98px !important;
+	}
+	/*底部100*/
+	#content.bottom-100{
+		bottom: 50px !important;
+	}
+	.padding-bottom-20{
+		padding-bottom: 100px;
+	}
+}
