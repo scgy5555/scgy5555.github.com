@@ -147,13 +147,14 @@ $(function() {
 	$("#focus ul").css("width",sWidth * (len));
 
 	function change() {
+		index += 1;
+		if(index >= len) {index = 0;}
 		showPics(index);
-		index++;
-		if(index == len) {index = 0;}
 	}
 
 
-	// picTimer = setInterval(change,3000);
+	picTimer = setInterval(change,3000);
+
 	 $("#focus").on(START_EV,function(event){
 	 	var ev = event.originalEvent;
 	 	var point = ev.changedTouches ? ev.changedTouches[0] : ev;
@@ -161,6 +162,9 @@ $(function() {
 	 	var $ul = $(this).find('ul');
 	 	var	nowX = Number(matrixToArray($ul.css('transform'))[4]);// 当前
 	 	var moveDirect = "";
+
+	 	clearInterval(picTimer);
+
 	 	$(this).on(MOVE_EV,function(event){
 	 		var ev = event.originalEvent;
 	 		var point = ev.changedTouches ? ev.changedTouches[0] : ev;
@@ -171,19 +175,18 @@ $(function() {
 			console.log('deltaX'+deltaX);
 			console.log('nowX'+Math.abs(nowX));
 
-			if(deltaX>0){
-				 // && Math.abs(deltaX) > Math.abs(nowX)/2
+			if(deltaX>0 && Math.abs(deltaX)>sWidth/4){
 				// +1
 				moveDirect = 'pre'
-				
 			}
-			else if(deltaX<0){
+			else if(deltaX<0 && Math.abs(deltaX)>sWidth/4){
 				// -1
 				moveDirect = 'next'
 			}
 
 			$ul.css('transform','translateX(' + translateX + 'px) translateZ(0)');
-	 		
+
+	 		return false;
 
 	 	}).on(END_EV,function(event){
 	 		var ev = event.originalEvent;
@@ -194,51 +197,21 @@ $(function() {
 			
 			if(moveDirect == 'next'){
 				index += 1;
-				if(index == len) {index = 0;}
+				if(index >= len) {index = 0;}
 			}
 			else if(moveDirect=='pre'){
 				index -= 1;
-				if(index == -1) {index = len - 1;}	
+				if(index <= -1) {index = len - 1;}	
 			}
 			console.log("结果"+index);
 
 			showPics(index);
 
+			picTimer = setInterval(change,3000);
+
 	 		$(this).off(END_EV).off(MOVE_EV);
 	 	})
-	 	
 	 })
-	//点击焦点图时停止自动播放，移出时开始自动播放
-
-	// .on(START_EV,function(e){
-	// 	// $('#c').text('进入点击');
-	// 	var point = hasTouch ? e.changedTouches[0] : e,
-	// 		startX = point.clientX;
-
-	// 	clearInterval(picTimer);
-
-	// 	$('#c').text('进入点击');
-		
-		
-	// }).on(MOVE_EV,function(e){
-	// 		// var point = hasTouch ? e.changedTouches[0] : e;
-	// 		// 	moveX = point.clientX;// 移动
-				
-	// 			// $ul = $(this).find('ul'),
-	// 			// matrix = $ul.css('transform'),
-	// 			// nowX = Number(matrixToArray(matrix)[4]),// 当前
-				
-	// 			// deltaX = moveX - startX,// 增加
-	// 			// translateX = nowX + deltaX;
-
-	// 		// $ul.css('transform','translateX('+translateX+'px) translateZ(0)')
-	// 		$('#c').text('进入滑动'+e.changedTouches[0].clientX);
-	// 		console.log(translateX);
-	// 		// 'transform':'translateX('+nowLeft+'px) translateZ(0)'
-	// }).on(END_EV,function(){
-	// 	$('#c').text('移出点击');
-		
-	// })
 	
 	//显示图片函数，根据接收的index值显示相应的内容
 	function showPics(index) { //普通切换
