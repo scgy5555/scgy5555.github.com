@@ -1,0 +1,41 @@
+---
+layout: post
+title: Pjax富应用架构
+---
+
+<h2>融合HTML5技术，主要通过pushState和全页面的Ajax实现富应用交互。</h2>
+
+<p>骨干框架 camera.js：作为最顶级平台，主要任务是初始化页面，以及提供路由操作支持。</p>
+
+<p>初始化工作：<br/>
+1.当用户首次加载网页时，下载camera.js和index.html空页面<br/>
+2.camera开始生成结构div，包含内容iframe。<br/>
+3.iframe加载不包含数据的静态页面<br/>
+</p>
+<p>
+手势库 touch.js：提供触控支持，ie10兼容处理，简单手势封装。<br/>
+历史库 history.js：提供State控制。<br/>
+动画库 animation.js：提供css3动画处理，封装简单动画接口。<br/>
+路由库 routing.js：处理访问真实路径，如果没有外层支持，也可以正常浏览网页。<br/>
+阴影库 shadow.js： 处理加载特效，iframe被切换到时给用户等待图标。<br/>
+缓存库 storage.js： 存储少量数据，控制ajax访问，不重复获取数据。<br/>
+通用库 jquery： 万能处理dom，css。<br/>
+事件库 event 事件判断和兼容性处理<br/>
+</p>
+<p>
+用户行为：<br/>
+1.用户点击超链<br/>
+2.超链引发pushState修改URL路径<br/>
+3.pushState被popState监听到，解析URL进入路由流程<br/>
+4.动画切换效果执行<br/>
+5.iframe静态页面Ajax加载开始<br/>
+</p>
+<p>
+插件<br/>
+iscroll 局部滚动<br/>
+validate 表单验证(专用)<br/>
+slider 带手势的轮播 可单独选择手势模式或自动轮播<br/>
+seajs 下载器，顺便用来做代码依赖管理<br/>
+</p>
+
+<p>{{ page.date | date_to_string }}</p>
