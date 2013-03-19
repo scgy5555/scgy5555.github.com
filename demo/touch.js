@@ -43,50 +43,45 @@ define(function(require, exports, module) {
 	var now, delta
 
 	$(document.body)
-		.bind(START_EV, function(ev){
-			e = ev.originalEvent,// 获取原生事件对象
-			point = e.changedTouches ? e.touches[0] : e,// 兼容性处理
-			now = Date.now()
-			delta = now - (touch.last || now)
-			touch.el = $(parentIfText(e.target))
-			touchTimeout && clearTimeout(touchTimeout)
-			touch.x1 = e.pageX
-			touch.y1 = e.pageY
-			if (delta > 0 && delta <= 250) touch.isDoubleTap = true
-			touch.last = now
+		.on(START_EV, function(ev){
+			var e = ev.originalEvent,// 获取原生事件对象
+				point = e.changedTouches ? e.touches[0] : e;// 兼容性处理
+
+			now = Date.now();
+			delta = now - (touch.last || now);
+			touch.el = $(parentIfText(e.target));
+			touchTimeout && clearTimeout(touchTimeout);
+			touch.x1 = e.pageX;
+			touch.y1 = e.pageY;
+			if (delta > 0 && delta <= 250){ touch.isDoubleTap = true }
+			touch.last = now;
 			longTapTimeout = setTimeout(longTap, longTapDelay)
-
-
-			$(this).bind(MOVE_EV, function(ev){
-				
-				console.log("进入");
-				e = ev.originalEvent,// 获取原生事件对象
-				point = e.changedTouches ? e.changedTouches[0] : e,// 兼容性处理
+			$(this).on(MOVE_EV, function(ev){
+				var e = ev.originalEvent,// 获取原生事件对象
+					point = e.changedTouches ? e.changedTouches[0] : e;// 兼容性处理
 				cancelLongTap()
 				touch.x2 = e.pageX
 				touch.y2 = e.pageY
 				if (Math.abs(touch.x1 - touch.x2) > 10)
 					e.preventDefault()
 			
-			})
-			.bind(END_EV, function(ev){
+			}).on(END_EV, function(ev){
+				var e = ev.originalEvent,// 获取原生事件对象
+					point = e.changedTouches ? e.changedTouches[0] : e;// 兼容性处理
 
-				e = ev.originalEvent,// 获取原生事件对象
-				point = e.changedTouches ? e.changedTouches[0] : e,// 兼容性处理
 				cancelLongTap()
-
 				// swipe
 				if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
-					(touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
+					(touch.y2 && Math.abs(touch.y1 - touch.y2) > 30)){
 						
 					swipeTimeout = setTimeout(function() {
 						touch.el.trigger('swipe')
 						touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
 						touch = {}
 					}, 0)
-
+				}
 				// normal tap
-				else if ('last' in touch)
+				else if ('last' in touch){
 					// delay by one tick so we can cancel the 'tap' event if 'scroll' fires
 					// ('tap' fires before 'scroll')
 					tapTimeout = setTimeout(function() {
@@ -96,7 +91,6 @@ define(function(require, exports, module) {
 						var event = $.Event('tap')
 						event.cancelTouch = cancelAll
 						touch.el.trigger(event)
-
 						// trigger double tap immediately
 						if (touch.isDoubleTap) {
 							touch.el.trigger('doubleTap')
@@ -112,17 +106,15 @@ define(function(require, exports, module) {
 							}, 250)
 						}
 					}, 0)
-
+				}
 				$(this).off(MOVE_EV).off(END_EV);
 			})
-		})
-		.bind(CANCEL_EV, cancelAll)
+		}).on('touchcancel', cancelAll)
 
-	$(window).bind('scroll', cancelAll);
-	
+	$(window).on('scroll', cancelAll);
 	['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(m){
 		$.fn[m] = function(callback){
-			return this.bind(m, callback)
+			return this.on(m, callback)
 		}
 	})
 })
