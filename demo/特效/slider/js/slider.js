@@ -194,8 +194,15 @@ $.fn.Slider = function(option){
 	}
 	/*获取位置*/
 	function getTranslate(matrix){
-		var m = matrix.substr(7, matrix.length - 8).split(', ')
-		return Number(m[4]);
+		if(matrix.indexOf('3d') > -1){
+			var m = matrix.substring(9, matrix.length - 1).split(', ')
+			return Number(m[12]);
+		}
+		else{
+			var m = matrix.substr(7, matrix.length - 8).split(', ')
+			return Number(m[4]);
+		}
+		
 	}
 
 	/*绑定轮播事件*/
