@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>双滚动DEMO</title>
+	<style>
+#iss1,#iss2{
+	position: absolute;
+	z-index: 1;
+	top: 45px;
+	bottom: 48px;
+	left: 0;
+	overflow: hidden;
+}
+#iss1{
+	width: 300px;
+	border:1px solid #000;
+	background: #aaa;
+}
+
+#iss2{
+	width: 300px;
+	border:1px solid #000;
+	background: #006699;
+	left: 400px;
+}
+</style>
+</head>
+<body>
+
+	<div id="iss1">
+		<div id="scroller">
+			<ul>
+				<li>这里是li1</li>
+				<li>这里是li2</li>
+				<li>这里是li3</li>
+				<li>这里是li4</li>
+				<li>这里是li5</li>
+				<li>这里是li6</li>
+				<li>这里是li7</li>
+				<li>这里是li8</li>
+				<li>这里是li9</li>
+				<li>这里是li10</li>
+				<li>这里是li11</li>
+				<li>这里是li12</li>
+				<li>这里是li13</li>
+				<li>这里是li14</li>
+				<li>这里是li15</li>
+				<li>这里是li16</li>
+				<li>这里是li17</li>
+				<li>这里是li18</li>
+				<li>这里是li19</li>
+				<li>这里是li20</li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="iss2">
+		<div id="scroller">
+			<ul>
+				<li>这里是li1</li>
+				<li>这里是li2</li>
+				<li>这里是li3</li>
+				<li>这里是li4</li>
+				<li>这里是li5</li>
+				<li>这里是li6</li>
+				<li>这里是li7</li>
+				<li>这里是li8</li>
+				<li>这里是li9</li>
+				<li>这里是li10</li>
+				<li>这里是li11</li>
+				<li>这里是li12</li>
+				<li>这里是li13</li>
+				<li>这里是li14</li>
+				<li>这里是li15</li>
+				<li>这里是li16</li>
+				<li>这里是li17</li>
+				<li>这里是li18</li>
+				<li>这里是li19</li>
+				<li>这里是li20</li>
+			</ul>
+		</div>
+	</div>
+
+</body>
+<script src="iscroll.js"></script>
+<script>
+	var iss1 = new iScroll("iss1");
+	var iss2 = new iScroll("iss2");
+</script>
+</html>
