@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="1000" height="500"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script>
+	var c = document.getElementById('canvas'),
+		cxt = c.getContext("2d"),
+		angel = 2 * Math.PI,
+		step = Math.PI / 10,
+		step2 = 0.2,
+		waveAsync,
+		i;
+
+	function draw(){
+		cxt.clearRect(0,0,c.width,c.height);
+		for (i = 0; i < 600; i+=10) {
+			cxt.fillStyle = randomColor();
+			cxt.beginPath();
+			angel -= step;
+			cxt.arc(i,150+100*Math.cos(angel),7,0,Math.PI*2,true);
+			cxt.closePath();
+			cxt.fill();
+		}
+	}
+	
+	waveAsync = eval(Wind.compile("async",function(){
+		while(true){
+			angel = 2 * Math.PI;
+			angel -= step2;
+			step2 += 0.1;
+			$await(Wind.Async.sleep(100))
+			draw();
+		}
+	}))
+
+	waveAsync().start();
+
+	/**
+	 * 随机色
+	 * @return 颜色数值
+	 */
+	function randomColor(){
+		var arrHex = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		var strHex = "#";
+		var index;
+		for (var i = 0; i < 6; i++) {
+			index = Math.round(Math.random()*15);
+			strHex += arrHex[index];
+		}
+		return strHex;
+	}
+
+</script>
+</html>

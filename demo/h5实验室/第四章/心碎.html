@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	#canvas{
+		border: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="430" height="430"></canvas>
+</body>
+<script src="Vector2.js"></script>
+<script src="Wind.js"></script>
+<script>
+	var canvas = document.getElementById('canvas')
+	var content = canvas.getContext("2d");
+	var ps = [];
+	var balls = [];
+	var breakTag;
+
+	function init(){
+		balls.length = 0;
+		ps.length = 0;
+		content.fillRect(0,0,430,430);
+		
+		var tex = "痴"
+
+		content.fillStyle = "rgba(0,0,0,1)";
+		content.fillRect(0,0,430,430);
+		content.fillStyle = "rgba(255,255,255,1)";
+		content.font = "bolder 400px 宋体";
+		content.textBaseline = "top";
+		content.fillText(tex,20,20);
+
+		for (y = 1; y < 400; y += 10) {
+			for (x = 1; x < 400; x+=10) {
+				imageData = content.getImageData(20+x,20+y,1,1);
+				if(imageData.data[0]>170){
+					ps.push({px:20+x,py:20+y});
+				}
+			}
+		}
+		content.fillStyle = "rgba(0,0,0,1)";
+		content.fillRect(20,20,400,400);
+	
+		for(i in ps){
+			var ball = {
+				x:ps[i].px,
+				y:ps[i].py,
+				r:2,
+				vx:getRandomNumber(-10,10),
+				vy:getRandomNumber(0,100)
+			};
+			balls.push(ball);
+		}
+		content.fillStyle = "#fff";
+		
+		for(i in balls){
+			content.beginPath();
+			content.arc(balls[i].x,balls[i].y,balls[i].r,0,Math.PI*2,true);
+			content.closePath();
+			content.fill();
+		}
+	}
+
+	var cyc = 10;
+	var a = 80;
+
+	var dropAsync = eval(Wind.compile("async",function(){
+		$await(Wind.Async.sleep(1500));
+		while(true){
+			if(breakTag){
+				break;
+			}
+			content.fillStyle = "rgba(0,0,0,.3)";
+			content.fillRect(0,0,canvas.width,canvas.height);
+			content.fillStyle = "#fff";
+
+			for (i in balls) {
+				content.beginPath();
+				content.arc(balls[i].x,balls[i].y,balls[i].r,0,Math.PI*2,true);
+				content.closePath();
+				content.fill();
+				balls[i].y+=balls[i].vy*cyc/1000;
+				balls[i].x+=balls[i].vx*cyc/1000;
+
+				if(balls[i].r+balls[i].y>=canvas.height){
+					if(balls[i].vy>0){
+						balls[i].vy*=-0.7;
+					}
+				}
+				else{
+					balls[i].vy+=a;
+				}
+			}
+			$await(Wind.Async.sleep(cyc));
+		}
+	}))
+	function getRandomNumber(min,max){
+		return (min + Math.floor(Math.random()*(max-min+1)));
+	}
+	init();
+	breakTag = false;
+	dropAsync().start();
+
+
+</script>
+</html>
