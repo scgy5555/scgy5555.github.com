@@ -9,7 +9,6 @@ title: Home
       <li>
       	<span>{{ post.date | date_to_string }}</span> &raquo;
       	<a target="_blank" title="{{ post.title }}" href="{{ post.url }}">{{ post.title }}</a>
-      	{{ post.url }}
       </li>
     {% endfor %}
   </ul>
