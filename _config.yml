@@ -6,7 +6,7 @@ description: Tag line #XXX
 author: scgy5555 #XXX
 email: scgy5555@gmail.com #XXX
 analytics_id: #Google Analytics ID : UA-xxx-xxx  
-#baseurl: /
+baseurl: /
 
 auto: false
 lsi: false
