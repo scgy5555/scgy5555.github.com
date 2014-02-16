@@ -1,7 +1,6 @@
 ---
 layout: default
 ---
-{% include header.html %}
 <section id="zan-bodyer">
 	<div class="container">
 		<section class="row">
@@ -20,7 +19,7 @@ layout: default
 				{% for post in site.posts %}
 				<div class="article well clearfix">
 					<!-- 最近的一篇 -->
-					{{site.posts | first}}
+					{{site.posts.first.date}}
 					<!-- {% if post.date == site.posts offset:3 %}
 					<i class="fa fa-bookmark article-stick visible-md visible-lg"></i>
 					{% endif %} -->
@@ -79,4 +78,3 @@ layout: default
 		</section>
 	</div>
 </section>
-{% include footer.html %}
