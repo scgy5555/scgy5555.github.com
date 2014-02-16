@@ -39,11 +39,13 @@ layout: default
 							<span class="label label-zan"><i class="fa fa-eye"></i> 1,200人</span>
 						</div>
 						<div class="content-article">					
-							<?php $thumb_img = has_post_thumbnail() ? get_the_post_thumbnail( $post->
-							ID, array(730, 300), array('alt' => trim(strip_tags( $post->post_title )),'title'=> trim(strip_tags( $post->post_title ))) ) : zanblog_get_thumbnail_img( 730, 300, 1);?>
-							<figure class="thumbnail"><a href="<?php the_permalink() ?>"><?php echo $thumb_img;?></a></figure>							
+							<figure class="thumbnail"><a href="{{ post.thumbnail }}">
+								{% if post.thumbnail %}
+								<img width="730" height="292" src="{{ post.thumbnail }}" class="attachment-730x300 wp-post-image" alt="{{ post.title }}" title="{{ post.title }}">
+								{% endif %}
+							</a></figure>							
 							<div class="alert alert-zan">					
-								<?php echo mb_strimwidth(strip_tags(apply_filters('the_content', $post->post_content)), 0, 250,"..."); ?>
+								{{ page.excerpt }}
 							</div>
 						</div>
 						<a class="btn btn-danger pull-right read-more" href="<?php the_permalink() ?>"  title="详细阅读 <?php the_title(); ?>">阅读全文 <span class="badge"><?php comments_number( '0', '1', '%' ); ?></span></a>
