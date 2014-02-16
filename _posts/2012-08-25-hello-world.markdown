@@ -1,6 +1,8 @@
 ---
 layout: post
 title: 你好，世界
+tags: 测试 测试2 测试3
+author: 你猜
 ---
 
 <h2>{{ page.title }}</h2>
