@@ -19,10 +19,9 @@ layout: default
 				{% for post in site.posts %}
 				<div class="article well clearfix">
 					<!-- 最近的一篇 -->
-					{{site.posts.first.date}}
-					<!-- {% if post.date == site.posts offset:3 %}
+					{% if post.date == site.posts.first.date %}
 					<i class="fa fa-bookmark article-stick visible-md visible-lg"></i>
-					{% endif %} -->
+					{% endif %}
 					<div class="data-article hidden-xs">
 						<span class="month">{{post.date | date:"%m"}}月</span>
 						<span class="day">{{post.date | date:"%d"}}</span>
