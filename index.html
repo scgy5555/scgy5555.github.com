@@ -47,7 +47,7 @@ layout: default
 								{% endif %}
 							</figure>							
 							<div class="alert alert-zan">					
-								{{ post.excerpt | strip_html | truncate:250 }}
+								{{ post.excerpt | strip_html | truncate:150 }}
 							</div>
 						</div>
 						<a class="btn btn-danger pull-right read-more" href="{{ post.url }}"  title="详细阅读 {{ post.title }}">阅读全文 <span class="badge">10</span></a>
