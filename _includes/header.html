@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<!-- 设置标题 -->
+<title>
+  {% if page.title %} {{ page.title }} | {% endif %} {{site.title}}
+</title> 
+
+<!-- 设置描述性标签和关键词标签 -->
+<meta content="{{page.excerpt}}" name="description">
+<meta content="{{page.tags}}" name="keywords">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<link rel="stylesheet" id="zanblog-style-css" href="/style.css?ver=2.0.7" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-style-css" href="/ui/css/bootstrap.css?ver=3.0.0" type="text/css" media="all">
+<link rel="stylesheet" id="fontawesome-style-css" href="/ui/font-awesome/css/font-awesome.min.css?ver=4.0.1" type="text/css" media="all">
+<link rel="stylesheet" id="icheck-style-css" href="/ui/css/flat/red.css?ver=3.6" type="text/css" media="all">
+<link rel="stylesheet" id="custom-style-css" href="/ui/css/custom.css?ver=2.0.7" type="text/css" media="all">
+
+<script type="text/javascript" src="http://static.duoshuo.com/embed.js" charset="UTF-8" async="async"></script>
+<script type="text/javascript" src="/js/jquery/jquery.js?ver=1.10.2"></script>
+<script type="text/javascript" src="/js/jquery/jquery-migrate.min.js?ver=1.2.1"></script>
+<script type="text/javascript" src="/ui/js/bootstrap.js?ver=3.0.0"></script>
+<script type="text/javascript" src="/ui/js/jquery.icheck.js?ver=3.6"></script>
+<script type="text/javascript" src="/ui/js/zanblog.js?ver=2.0.7"></script>
+<script type="text/javascript" src="/ui/js/custom.js?ver=2.0.7"></script>
+
+<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements Responsive IE8-->
+<!--[if lt IE 9]>
+  <script src="/ui/js/modernizr.js"></script>
+  <script src="/ui/js/respond.min.js"></script>
+  <script src="/ui/js/html5shiv.js"></script>
+<![endif]-->
+
+</head>
+<body class="single single-post postid-763 single-format-standard">
+<header id="zan-header" class="navbar navbar-inverse bs-docs-nav">
+  <nav class="container">
+    <a href="/"><div class="navbar-brand"></div></a>
+    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="fa fa-reorder fa-lg"></span>
+    </button>
+    <div class="navbar-collapse bs-navbar-collapse collapse">
+        <!-- 循环标签 -->
+        {% include headnav.html %}
+        <!-- /循环标签 -->
+        <div class="search visible-lg">
+           <form method="get" id="searchform" class="form-inline" action="">
+              <input class="form-control" type="text" name="s" id="s" placeholder="搜索..." />
+              <button type="submit" class="btn btn-danger btn-small" name="submit" ><i class="fa fa-search"></i></button>
+           </form>
+        </div>
+    </div>
+  </nav>
+  <div id="if-fixed" class="pull-right visible-lg visible-md">
+    <i class="fa fa-thumb-tack"></i>
+    <input type="checkbox">
+  </div>
+</header>
