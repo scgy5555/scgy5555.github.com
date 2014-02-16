@@ -6,8 +6,6 @@ author: 你猜
 thumbnail: http://www.yeahzan.com/zanblog/wp-content/uploads/2013/09/car_10.jpg
 ---
 
-<h2>{{ page.title }}</h2>
 
 ##我的第一篇文章##
 
-<p>{{ page.date | date_to_string }}</p>
