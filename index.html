@@ -29,14 +29,14 @@ layout: default
 					<!-- PC端设备文章属性 -->
 					<section class="visible-md visible-lg">
 						<div class="title-article">
-							<h1><a href="<?php the_permalink() ?>">
-								<?php the_title(); ?>
+							<h1><a href="{{ post.url }}">
+								{{ post.title }}
 							</a></h1>
 						</div>
 						<div class="tag-article container">
-							<span class="label label-zan"><i class="fa fa-tags"></i> <?php the_category(','); ?></span>
-							<span class="label label-zan"><i class="fa fa-user"></i> <?php the_author_posts_link(); ?></span>
-							<span class="label label-zan"><i class="fa fa-eye"></i> <?php if(function_exists('the_views')) { the_views(); } ?></span>
+							<span class="label label-zan"><i class="fa fa-tags"></i> {{ page.tags.first }}</span>
+							<span class="label label-zan"><i class="fa fa-user"></i> {{ page.author }}</span>
+							<span class="label label-zan"><i class="fa fa-eye"></i> 1,200人</span>
 						</div>
 						<div class="content-article">					
 							<?php $thumb_img = has_post_thumbnail() ? get_the_post_thumbnail( $post->
