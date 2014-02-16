@@ -228,6 +228,7 @@ div.search input[type="text"] {
 	position: relative;
 	margin-bottom: 30px;
 	padding-bottom: 20px;
+	font-size: 1.25em;
 }
 
 /*文章-置顶*/
