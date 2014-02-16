@@ -20,6 +20,7 @@ layout: default
 				{% for post in site.posts %}
 				<div class="article well clearfix">
 					<!-- 最近的一篇 -->
+					{{site.posts | first}}
 					<!-- {% if post.date == site.posts offset:3 %}
 					<i class="fa fa-bookmark article-stick visible-md visible-lg"></i>
 					{% endif %} -->
