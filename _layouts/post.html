@@ -1,19 +1,23 @@
 ---
 layout: default
 ---
-<article>
- <section>
-    {{content}}
- </section>
-</article>
-
-{% if site.lsi %}    
-<section id="related">
-  <h2>Related Posts</h2>
-  <ul class="posts">
-    {% for post in site.related_posts limit:3 %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
-  </ul>
-  </section>
-{% endif %}
+<div id="zan-bodyer" style="padding-top: 30px;">
+	<div class="container">
+		<section class="row">
+			<div class="col-md-8">
+				<article class="article well clearfix">
+					<!-- 面包屑 -->
+					<div class="breadcrumb">
+					    <i class="fa fa-home"></i> <!-- Breadcrumb NavXT 4.4.0 -->
+						<a title="Go to Home." href="/" class="home">Home</a> / {{ post.title }}
+					</div>
+					<!-- 面包屑 -->
+					<p>
+						{{ content }}
+					</p>
+				</article>
+			</div>
+			{% include sidebar.html %}
+		</section>
+	</div>
+</div>
