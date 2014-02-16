@@ -8,12 +8,12 @@
 		</div>
 		<!-- 大屏PC端、手机端 -->
 		<ul class="list-group list-group-flush visible-lg visible-xs">
-			{% for post in site.posts offset:8 limit:8%}
+			{% for post in site.posts offset:8 limit:8 %}
 			<li class="list-group-item">
 				<a href="{{ post.url }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
 				<span class="badge"> 110 </span>
 			</li>
-			{% for post in site.posts %}
+			{% endfor %}
 		</ul>
 		<!-- 小屏PC端 -->
 		<ul class="list-group list-group-flush visible-md">
@@ -22,7 +22,7 @@
 				<a href="{{ post.url }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
 				<span class="badge"> 110 </span>
 			</li>
-			{% for post in site.posts %}
+			{% endfor %}
 		</ul>
 		<!-- 平板端 -->
 		<ul class="list-group list-group-flush visible-sm">
@@ -31,7 +31,7 @@
 				<a href="{{ post.url }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
 				<span class="badge"> 110 </span>
 			</li>
-			{% for post in site.posts %}
+			{% endfor %}
 		</ul>
 	</div>
 	<!-- 最新评论模块 -->
