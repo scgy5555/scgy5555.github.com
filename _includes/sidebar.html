@@ -8,30 +8,30 @@
 		</div>
 		<!-- 大屏PC端、手机端 -->
 		<ul class="list-group list-group-flush visible-lg visible-xs">
-			<!-- {% for post in site.posts offset:8 limit:8 %} -->
+			{% for post in site.posts offset:8 limit:8 %}
 			<li class="list-group-item">
 				<a href="{{ post.url }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
-				<span class="badge"> 110 </span>
+				<span class="badge"> hot </span>
 			</li>
-			<!-- {% endfor %} -->
+			{% endfor %}
 		</ul>
 		<!-- 小屏PC端 -->
 		<ul class="list-group list-group-flush visible-md">
-			<!-- {% for post in site.posts %} -->
+			{% for post in site.posts offset:8 limit:8 %}
 			<li class="list-group-item">
 				<a href="{{ post.url }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
-				<span class="badge"> 110 </span>
+				<span class="badge"> hot </span>
 			</li>
-			<!-- {% endfor %} -->
+			{% endfor %}
 		</ul>
 		<!-- 平板端 -->
 		<ul class="list-group list-group-flush visible-sm">
-			<!-- {% for post in site.posts %} -->
+			{% for post in site.posts offset:8 limit:8 %}
 			<li class="list-group-item">
 				<a href="{{ post.url }}" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
-				<span class="badge"> 110 </span>
+				<span class="badge"> hot </span>
 			</li>
-			<!-- {% endfor %} -->
+			{% endfor %}
 		</ul>
 	</div>
 	<!-- 最新评论模块 -->
@@ -46,10 +46,35 @@
 			{% endif %}
 		</ul>
 		<div class="tab-content">
-			<div class="tab-pane active nav bs-sidenav fade in" id="sidebar-categories"></div>
-			<div class="tab-pane fade" id="sidebar-tags"></div>
+			<div class="tab-pane active nav bs-sidenav fade in" id="sidebar-categories">
+				<li class="cat-item cat-item-21">
+					<a href="/" title="查看Bootstrap3下的所有文章">Bootstrap3</a>
+				</li>
+				<li class="cat-item cat-item-17">
+					<a href="/" title="查看WordPress下的所有文章">WordPress</a>
+				</li>
+				<li class="cat-item cat-item-29">
+					<a href="/" title="查看Zanblog下的所有文章">Zanblog</a>
+				</li>
+			</div>
+			<div class="tab-pane fade" id="sidebar-tags">
+				<a href="/" class="tag-link-21" title="2个话题" style="color:#7543a8;font-size: 11pt;;">Bootstrap3</a>
+				<a href="/" class="tag-link-22" title="4个话题" style="color:#958c4;font-size: 14.666666666667pt;;">WordPress</a>
+				<a href="/" class="tag-link-29" title="17个话题" style="color:#f137e9;font-size: 24pt;;">Zanblog</a>
+				<a href="/" class="tag-link-32" title="1个话题" style="color:#141e67;font-size: 8pt;;">ZanUI</a>
+			</div>
 			{% if page.title == "首页" %}
-			<div class="tab-pane nav bs-sidenav fade" id="sidebar-links"></div>
+			<div class="tab-pane nav bs-sidenav fade" id="sidebar-links">
+				<li>
+					<a href="http://www.bootcss.com" title="BootStrap中文网">Bootstrap中文网</a>
+				</li>
+				<li>
+					<a href="/" title="杭州网站建设" target="_blank">佚站互联</a>
+				</li>
+				<li>
+					<a href="/" title="杭州网站建设">杭州网站建设</a>
+				</li>
+			</div>
 			{% endif %}
 		</div>
 	</div>
