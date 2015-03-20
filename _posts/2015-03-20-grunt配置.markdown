@@ -1,10 +1,8 @@
 ---
-
 layout: post
 title: Grunt配置
 tags: grunt
 author: scgy5555
-
 ---
 
 # Grunt配置
@@ -14,34 +12,90 @@ author: scgy5555
 ### 1.使用cnpm
 ### 2.配置文件
 
----
+=====
 
 ## 功能点
 
 ### 1.coffee/sass
 #### 编译
+编译sass时注意需要使用ruby尽心安装，而在国内rubygems访问速度较慢，万幸淘宝给出了rubygems的国内镜像
+
+**使用方法**
+
+```
+$ gem sources --remove https://rubygems.org/
+$ gem sources -a https://ruby.taobao.org/
+$ gem sources -l
+$ sudo gem install sass
+```
+
 #### map
 
----
+=====
 
 ### 2.jshint
 #### 校对
 #### 配置
+jshint的配置项目还是较多，可以根据配置说明进行调整
+[配置说明](http://www.shaoqun.com/a/92533.aspx)
 
----
+因为coffee编译结果比较固定，我使用的是
+
+```
+"browser": true,// 支持浏览器api
+"node": true,// 支持node api
+"undef": true,// 不允许未定义引用
+"eqnull": true,// 允许==null
+"expr": true,// 允许应该出现赋值或函数调用的地方使用表达式
+"shadow": true,// 允许同名变量重复定义
+"sub": true,// 允许person['name']
+"multistr": true,// 允许多行字符串
+"boss": true// 允许使用赋值
+```
+
+=====
 
 ### 3.require
 #### webpack
 
----
+=====
 
 ### 4.debug
 #### 自动化测试
+#### 静态服务器
+当然可以选择使用grunt的静态服务器，但是mac既然已经自带了ruby环境就可以直接使用ruby创建静态服务器
 
----
+```
+ruby -run -e httpd . -p 4000
+```
+
+=====
 
 ### 5.git
 #### 命令行
+使用shell-task插件，可以直接执行命令
 
----
+=====
 
+## 工作流程
+### 开发环境
+开发环境以调试为主，编译出能调试的源码或者留着map文件都是可行的。
+
+1. 编译全部文件到build
+2. 验证语法 合并app.js到dist 
+3. 编译sass到css不压缩
+
+### 生产环境
+产品上线环境应大幅缩小代码，混淆变量
+
+1. 压缩app 清空build
+2. 编译sass到css压缩
+
+
+## 注意事项
+### 1.grunt每条命令可以写多个配置
+开发配置和上线配置可以写两套   
+执行时 命令:配置
+### 2.npm install使用-save-dev
+会将插件信息自动填充到配置文件   
+如果不添加-dev会创建到dependencies下
