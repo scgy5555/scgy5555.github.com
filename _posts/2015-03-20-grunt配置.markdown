@@ -1,0 +1,47 @@
+---
+
+layout: post
+title: Grunt配置
+tags: grunt
+author: scgy5555
+
+---
+
+# Grunt配置
+
+## 安装程序
+
+### 1.使用cnpm
+### 2.配置文件
+
+---
+
+## 功能点
+
+### 1.coffee/sass
+#### 编译
+#### map
+
+---
+
+### 2.jshint
+#### 校对
+#### 配置
+
+---
+
+### 3.require
+#### webpack
+
+---
+
+### 4.debug
+#### 自动化测试
+
+---
+
+### 5.git
+#### 命令行
+
+---
+
